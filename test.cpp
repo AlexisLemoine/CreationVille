@@ -1,5 +1,6 @@
 #include <CGAL/Linear_cell_complex_for_combinatorial_map.h>
 #include <CGAL/draw_linear_cell_complex.h>
+#include "My_linear_cell_complex_incremental_builder.h"
 
 typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Dart_handle Dart_handle;
@@ -7,8 +8,17 @@ typedef LCC::Point Point;
 
 int main()
 {
-  LCC lcc;
-  Dart_handle dh1=
+  // LCC ib;
+  Point I0 = Point(0, 0, 0);
+  Point I1 = Point(0, 2, -1);
+  Point I2 = Point(1, 0, 1);
+
+  My_linear_cell_complex_incremental_builder_3 ib;
+  ib.begin_surface();
+    ib.add_facet({I0, I1, I2 });
+  ib.end_surface();
+
+/*  Dart_handle dh1=
     lcc.make_hexahedron(Point(0,0,0), Point(5,0,0),
                         Point(5,5,0), Point(0,5,0),
                         Point(0,5,4), Point(0,0,4),
@@ -31,7 +41,7 @@ int main()
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl;
-  CGAL::draw(lcc);
+  draw(lcc); */
 
   return EXIT_SUCCESS;
 }
