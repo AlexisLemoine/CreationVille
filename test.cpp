@@ -8,14 +8,16 @@ typedef LCC::Point Point;
 
 int main()
 {
-  // LCC ib;
-  Point I0 = Point(0, 0, 0);
-  Point I1 = Point(0, 2, -1);
-  Point I2 = Point(1, 0, 1);
+  LCC lcc;
+  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
-  My_linear_cell_complex_incremental_builder_3 ib;
+    ib.add_vertex(Point(0,0,0));
+    ib.add_vertex(Point(1,0,0));
+    ib.add_vertex(Point(1,1,0));
+
+  // My_linear_cell_complex_incremental_builder_3 ib;
   ib.begin_surface();
-    ib.add_facet({I0, I1, I2 });
+    ib.add_facet({0,1,2});
   ib.end_surface();
 
 /*  Dart_handle dh1=
@@ -40,8 +42,8 @@ int main()
   lcc.sew<3>(lcc.beta(dh1), lcc.beta(dh3,2,1,1));
 
   lcc.display_characteristics(std::cout)<<", valid="
-                                        <<lcc.is_valid()<<std::endl;
-  draw(lcc); */
+                                        <<lcc.is_valid()<<std::endl; */
+  draw(lcc);
 
   return EXIT_SUCCESS;
 }
