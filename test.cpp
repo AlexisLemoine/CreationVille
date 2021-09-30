@@ -1,8 +1,3 @@
-#include <CGAL/Linear_cell_complex_for_combinatorial_map.h>
-#include <CGAL/draw_linear_cell_complex.h>
-#include "My_linear_cell_complex_incremental_builder.h"
-
-typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Dart_handle Dart_handle;
 typedef LCC::Point Point;
 
@@ -108,12 +103,10 @@ void maison (float x, float z, float lx, float lz, LCC& lcc) {
 int main()
 {
   LCC lcc;
-<<<<<<< HEAD
+
   maison (5,5,3,2,lcc);
   immeuble (10, 10, 10, 3, 7, lcc);
 
-  /*  Dart_handle dh1=
-=======
   My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
     ib.add_vertex(Point(0,0,0));
@@ -126,7 +119,6 @@ int main()
   ib.end_surface();
 
 /*  Dart_handle dh1=
->>>>>>> 57eaf96b5ee81113c99e2f960b00f5f0377ba8c4
     lcc.make_hexahedron(Point(0,0,0), Point(5,0,0),
                         Point(5,5,0), Point(0,5,0),
                         Point(0,5,4), Point(0,0,4),
@@ -143,9 +135,9 @@ int main()
                         Point(0,5,4), Point(0,5,0),
                         Point(0,5,0), Point(0,5,4));
 
-                        lcc.sew<3>(lcc.beta(dh1, 1, 1, 2), lcc.beta(dh2, 2));*/
+  lcc.sew<3>(lcc.beta(dh1, 1, 1, 2), lcc.beta(dh2, 2));
 
-  //  lcc.sew<3>(lcc.beta(dh1), lcc.beta(dh3,2,1,1));
+  lcc.sew<3>(lcc.beta(dh1), lcc.beta(dh3,2,1,1));
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
