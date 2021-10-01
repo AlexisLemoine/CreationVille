@@ -8380,19 +8380,15 @@ initializer_list
 CGAL/Linear_cell_complex_base.h
 -
 
-/home/dylan/lifprojet/projet-creation-de-ville/elementVille.cpp
+/home/dylan/lifprojet/projet-creation-de-ville/immeuble.cpp
 CGAL/Linear_cell_complex_for_combinatorial_map.h
 -
 CGAL/draw_linear_cell_complex.h
 -
 My_linear_cell_complex_incremental_builder.h
 /home/dylan/lifprojet/projet-creation-de-ville/My_linear_cell_complex_incremental_builder.h
-elementVille.h
-/home/dylan/lifprojet/projet-creation-de-ville/elementVille.h
 immeuble.h
 /home/dylan/lifprojet/projet-creation-de-ville/immeuble.h
-
-/home/dylan/lifprojet/projet-creation-de-ville/elementVille.h
 
 /home/dylan/lifprojet/projet-creation-de-ville/immeuble.h
 
