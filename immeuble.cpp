@@ -40,3 +40,22 @@ void immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
 
     ib.end_surface();
 }
+
+void immeuble::toit (float x, float y, float z, float lx, float ly, float lz, LCC& lcc) {
+    My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
+    //4 sommets de la base d'une pyramide
+    ib.add_vertex(Point(x , y , z));
+    ib.add_vertex(Point(x , y , z+lz));
+    ib.add_vertex(Point(x+lx , y , z));
+    ib.add_vertex(Point(x+lx , y , z+lz));
+    //sommet de la pyramide
+    ib.add_vertex(Point(x+lx/2 , y+ly , z+lz/2));
+
+    //création des faces de la pyramide
+    ib.add_facet({0,1,4});
+    ib.add_facet({2,0,4});
+    ib.add_facet({3,2,4});
+    ib.add_facet({1,3,4});
+    ib.end_surface();
+
+}
