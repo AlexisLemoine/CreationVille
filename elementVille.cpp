@@ -50,3 +50,40 @@ void elementVille::creermaison (float x, float z, float lx, float lz, LCC& lcc) 
   ibb.add_facet({5,8,1});
   ibb.end_surface();
 }
+
+
+void elementVille::genererquartier (int nb, LCC& lcc) {
+    int tab[50][50];
+    bool good;
+    int cases;
+    float x, lx, z, lz;
+    for (int i=0; i<nb; i++) {
+        int imm = rand()%2;
+        good = false;
+        while (good == false){
+            x = rand()%12;
+            z = rand()%12;
+            lx = rand()%3 + 1;
+            lz = rand()%3 + 1;
+            std::cout<<x<<" "<<z<<" "<<lx<<" "<<lz<<"\n";
+            cases=0;
+            for (int j=x; j<x+lx; j++) {
+                for (int k=z; k<z+lz; k++) {
+                    if (tab[j][k]!=1) {
+                        tab[j][k]=1;
+                    }
+                    else cases += 1;
+                }
+            }
+            good = (cases==0);
+            std::cout<<good << "\n";
+        }
+        if (imm==0) {
+            creermaison(x, z, lx, lz, lcc);
+        }
+        else {
+            int etage = rand()%10 + 1;
+            creerimmeuble(x, z, lx, lz, etage, lcc);
+        }
+    }
+}

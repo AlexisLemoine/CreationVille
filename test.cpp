@@ -11,19 +11,20 @@ int main()
 {
   LCC lcc;
   elementVille M, I;
-  M.creermaison (5,5,3,2,lcc);
-  I.creerimmeuble (10, 10, 10, 3, 7, lcc);
+  //M.creermaison (5,5,3,2,lcc);
+  //I.creerimmeuble (10, 10, 10, 3, 7, lcc);
+  M.genererquartier(12, lcc);
 
-  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
+//  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
-    ib.add_vertex(Point(0,0,0));
-    ib.add_vertex(Point(1,0,0));
-    ib.add_vertex(Point(1,1,0));
+//    ib.add_vertex(Point(0,0,0));
+//    ib.add_vertex(Point(1,0,0));
+//    ib.add_vertex(Point(1,1,0));
 
-  // My_linear_cell_complex_incremental_builder_3 ib;
-  ib.begin_surface();
-    ib.add_facet({0,1,2});
-  ib.end_surface();
+//  // My_linear_cell_complex_incremental_builder_3 ib;
+//  ib.begin_surface();
+//    ib.add_facet({0,1,2});
+//  ib.end_surface();
 
 /*  Dart_handle dh1=
     lcc.make_hexahedron(Point(0,0,0), Point(5,0,0),

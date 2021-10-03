@@ -11,6 +11,7 @@ class elementVille
 public:
     void creerimmeuble (float x, float z, float lx, float lz, int etg, LCC& lcc);
     void creermaison (float x, float z, float lx, float lz, LCC& lcc);
+    void genererquartier (int nb, LCC& lcc);
 };
 
 #endif // ELEMENTVILLE_H
