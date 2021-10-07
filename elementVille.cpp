@@ -8,6 +8,9 @@ typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Dart_handle Dart_handle;
 typedef LCC::Point Point;
 
+
+//On créé et on affiche un immeuble, aux coordonées (x,z), de longueur lx sur l'axe x, lz sur l'axe z, et d'un nombre d'étage etg
+//Pour cela on fait appelle à la fonction étage qui vient créer des étages un à un les uns sur les autres
 void elementVille::creerimmeuble (float x, float z, float lx, float lz, int etg, LCC& lcc) {
     immeuble j;
     for (float i=0; i<=etg; i++) {
@@ -15,8 +18,9 @@ void elementVille::creerimmeuble (float x, float z, float lx, float lz, int etg,
     }
 }
 
+//On créé et on affiche une maison, aux coordonnées (x,z), de longueur lx sur l'axe x, lz sur l'axe z
+//Pour cela, on fait appel à la fonction étage qui vient créé un étage, auquel on rajoute un toit en faisant appel à la fonction du même nom
 void elementVille::creermaison (float x, float z, float lx, float lz, LCC& lcc) {
-//    My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     My_linear_cell_complex_incremental_builder_3<LCC> ibb(lcc);
     //MAISON EN FONCTION DES PARAMETRES
     immeuble j;
@@ -51,32 +55,51 @@ void elementVille::creermaison (float x, float z, float lx, float lz, LCC& lcc) 
   ibb.end_surface();
 }
 
-
+//On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier
 void elementVille::genererquartier (int nb, LCC& lcc) {
     int tab[50][50];
     bool good;
     int cases;
     float x, lx, z, lz;
     for (int i=0; i<nb; i++) {
-        int imm = rand()%2;
+        int imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
         good = false;
-        while (good == false){
-            x = rand()%12;
+        while (good == false){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
+            //ici les coordonées sont entre 0 et 11 en x et z, et les longueurs des batiments entre 1 et 3
+            x = rand()%12; 
             z = rand()%12;
             lx = rand()%3 + 1;
-            lz = rand()%3 + 1;
+            lz = rand()%3 + 1; 
             std::cout<<x<<" "<<z<<" "<<lx<<" "<<lz<<"\n";
             cases=0;
+
+
             for (int j=x; j<x+lx; j++) {
                 for (int k=z; k<z+lz; k++) {
                     if (tab[j][k]!=1) {
                         tab[j][k]=1;
                     }
-                    else cases += 1;
+                    else cases += 1; //on compte le nombre de cases occupées par le batiment qui sont libres, si ce nombre n'est pas égal à 0, on relance
                 }
             }
+
+            ///////////////////////////////////////////////////////////////////
+/*          for (int j=x; j<x+lx; j++) {
+                for (int k=z; k<z+lz; k++) {
+                    if (tab[j][k]=1) {
+                        cases += 1;
+                    }
+                }
+            }
+            if (cases==0) {
+                for (int j=x; j<x+lx; j++) {
+                    for (int k=z; k<z+lz; k++) {
+                            tab[j][k]=1;
+                    }
+                }
+            }
+*/          ////////////////////////////////////////////////////////////////////
             good = (cases==0);
-            std::cout<<good << "\n";
         }
         if (imm==0) {
             creermaison(x, z, lx, lz, lcc);

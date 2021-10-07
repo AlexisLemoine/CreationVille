@@ -11,9 +11,9 @@ int main()
 {
   LCC lcc;
   elementVille M, I;
-  //M.creermaison (5,5,3,2,lcc);
-  //I.creerimmeuble (10, 10, 10, 3, 7, lcc);
-  M.genererquartier(12, lcc);
+  M.creermaison (-5,-5,3,2,lcc);
+  I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
+  M.genererquartier(15, lcc);
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 

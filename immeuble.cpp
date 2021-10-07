@@ -8,6 +8,7 @@ typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Point Point;
 typedef LCC::Dart_handle Dart_handle;
 
+//créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 void immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //8 sommets d'un cube
@@ -49,6 +50,7 @@ void immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
     ib.end_surface();
 }
 
+//Créé les 4 pentes d'un toit de type pyramide aux coordonnées (x,y,z), de longueur lx, lz, et de hauteur à la pointe ly
 void immeuble::toit (float x, float y, float z, float lx, float ly, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //4 sommets de la base d'une pyramide
