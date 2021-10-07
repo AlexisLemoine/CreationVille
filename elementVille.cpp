@@ -73,7 +73,7 @@ void elementVille::genererquartier (int nb, LCC& lcc) {
             std::cout<<x<<" "<<z<<" "<<lx<<" "<<lz<<"\n";
             cases=0;
 
-
+            //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
             for (int j=x; j<x+lx; j++) {
                 for (int k=z; k<z+lz; k++) {
                     if (tab[j][k]!=1) {
