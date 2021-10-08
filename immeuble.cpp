@@ -41,23 +41,24 @@ void immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
 
     // création de 4 points sur les arrètes
     Dart_handle dh7 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 1), Point(x + lx, y, z + lz - 0.2));
-    Dart_handle dh8 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 0),Point(x, y, z + lz - 0.2));
-    Dart_handle dh9 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 1), Point(x+lx, y, z+0.2));
+    Dart_handle dh9 = lcc.insert_point_in_cell<1>(dh7, Point(x+lx, y, z+0.2));
     Dart_handle dh10 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 0), Point(x, y, z+0.2));
+    Dart_handle dh8 = lcc.insert_point_in_cell<1>(dh10,Point(x, y, z + lz - 0.2));
 
     // on relie ces quatres points
     Dart_handle dh11 = lcc.insert_cell_1_in_cell_2(dh8, dh7);
     Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(dh9, dh10);
 
     // on pose 4 points sur les nouvelles lignes
-    Dart_handle dh13 = lcc.insert_point_in_cell<1>(dh11, Point(x+0.2, y, z+lz-0.2));
-    Dart_handle dh14 = lcc.insert_point_in_cell<1>(dh11, Point(x+lx-0.2, y, z+lz-0.2));
-    Dart_handle dh15 = lcc.insert_point_in_cell<1>(dh12, Point(x+0.2, y, z+0.2));
-    Dart_handle dh16 = lcc.insert_point_in_cell<1>(dh12, Point(x+lx-0.2, y, z+0.2));
 
-    // on relie ces quatres nouveaux points. Utile ?
-    // Dart_handle dh17 = lcc.insert_cell_1_in_cell_2(dh15, dh13);
-    // Dart_handle dh18 = lcc.insert_cell_1_in_cell_2(dh16, dh14);
+    Dart_handle dh14 = lcc.insert_point_in_cell<1>(dh11, Point(x+lx-0.2, y, z+lz-0.2));
+    Dart_handle dh13 = lcc.insert_point_in_cell<1>(dh14, Point(x+0.2, y, z+lz-0.2));
+    Dart_handle dh16 = lcc.insert_point_in_cell<1>(dh12, Point(x+0.2, y, z+0.2));
+    Dart_handle dh15 = lcc.insert_point_in_cell<1>(dh16, Point(x+lx-0.2, y, z+0.2));
+
+    // on relie ces quatres nouveaux points.
+    Dart_handle dh17 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh11,2), lcc.beta(dh16,2));
+    Dart_handle dh18 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh12,2), lcc.beta(dh14, 2));
 
 
     // lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y + 1, z + lz));
