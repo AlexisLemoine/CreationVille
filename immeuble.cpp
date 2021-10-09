@@ -41,15 +41,17 @@ void immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
 
     // lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y + 1, z + lz));
     // lcc.insert_point_in_cell<1>(dh4,Point(x + lx - 0.2, y + 1, z + lz));
-    // lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + 0.2));
-    lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + lz - 0.2));
+    // // lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + 0.2));
+    // lcc.insert_point_in_cell<1>(dh5,Point(x + 0.2, y, z + lz));
+    // lcc.insert_point_in_cell<1>(lcc.beta(dh5,0, 0),Point(x + 0.2, y, z));
+    //Dart_handle dh11 = lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + lz - 0.2));
     // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1), Point(x + 0.2, y + 1, z));
     // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1),Point(x + lx - 0.2, y + 1, z));
     // lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y + 1, z + 0.2));
-    lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y + 1, z + lz - 0.2));
+    //Dart_Handle dh10 = lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y + 1, z + lz - 0.2));
 
 
-    Dart_handle dh7 = lcc.insert_cell_0_in_cell_1(dh6);
+    Dart_handle dh7 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh5, 1), lcc.beta(dh5, 0, 0));
     CGAL_assertion( lcc.is_valid() );
     //  const Point& i0=(Point(x , y , z));
     //  const Point& i1=(Point(x+lx , y , z));
@@ -83,3 +85,4 @@ void immeuble::toit (float x, float y, float z, float lx, float ly, float lz, LC
     ib.end_surface();
 
 }
+

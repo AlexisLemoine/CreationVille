@@ -9,6 +9,7 @@ public:
     // immeuble();
     void etage (float x, float y, float z, float lx, float lz, LCC& lcc);
     void toit (float x, float y, float z, float lx, float ly, float lz, LCC& lcc);
+
 };
 
 #endif // IMMEUBLE_H
