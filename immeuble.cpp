@@ -33,26 +33,54 @@ void immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
     /*lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y, z + lz));
     lcc.insert_point_in_cell<1>(dh4,Point(x + lx - 0.2, y, z + lz));
     lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y, z + 0.2));
-    lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y, z + lz - 0.2));
     lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1), Point(x + 0.2, y, z));
     lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1),Point(x + lx - 0.2, y, z));
-    lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y, z + 0.2));
-    lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y, z + lz - 0.2)); */
+    lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y, z + 0.2));*/
+
+    // création des points et traits a l'intérieur de la face du bas :
+
+    // création de 4 points sur les arrètes
+    Dart_handle dh7 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 1), Point(x + lx, y, z + lz - 0.2));
+    Dart_handle dh9 = lcc.insert_point_in_cell<1>(dh7, Point(x+lx, y, z+0.2));
+    Dart_handle dh10 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 0), Point(x, y, z+0.2));
+    Dart_handle dh8 = lcc.insert_point_in_cell<1>(dh10,Point(x, y, z + lz - 0.2));
+
+    // on relie ces quatres points
+    Dart_handle dh11 = lcc.insert_cell_1_in_cell_2(dh8, dh7);
+    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(dh9, dh10);
+
+    // on pose 4 points sur les nouvelles lignes
+
+    Dart_handle dh14 = lcc.insert_point_in_cell<1>(dh11, Point(x+lx-0.2, y, z+lz-0.2));
+    Dart_handle dh13 = lcc.insert_point_in_cell<1>(dh14, Point(x+0.2, y, z+lz-0.2));
+    Dart_handle dh16 = lcc.insert_point_in_cell<1>(dh12, Point(x+0.2, y, z+0.2));
+    Dart_handle dh15 = lcc.insert_point_in_cell<1>(dh16, Point(x+lx-0.2, y, z+0.2));
+
+    // on relie ces quatres nouveaux points.
+    Dart_handle dh17 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh11,2), lcc.beta(dh16,2));
+    Dart_handle dh18 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh12,2), lcc.beta(dh14, 2));
+
 
     // lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y + 1, z + lz));
     // lcc.insert_point_in_cell<1>(dh4,Point(x + lx - 0.2, y + 1, z + lz));
-    // // lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + 0.2));
-    // lcc.insert_point_in_cell<1>(dh5,Point(x + 0.2, y, z + lz));
-    // lcc.insert_point_in_cell<1>(lcc.beta(dh5,0, 0),Point(x + 0.2, y, z));
-    //Dart_handle dh11 = lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + lz - 0.2));
+    // lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + 0.2));
+    // lcc.insert_point_in_cell<1>(lcc.beta(lcc.beta(dh6, 1), 1),Point(x + lx, y + 1, z + lz - 0.2));
     // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1), Point(x + 0.2, y + 1, z));
     // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1),Point(x + lx - 0.2, y + 1, z));
     // lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y + 1, z + 0.2));
-    //Dart_Handle dh10 = lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y + 1, z + lz - 0.2));
+    // lcc.insert_point_in_cell<1>(dh6, Point(x, y + 1, z + lz - 0.2));
 
+    // on fait la même chose pour la face du haut :
 
-    Dart_handle dh7 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh5, 1), lcc.beta(dh5, 0, 0));
-    CGAL_assertion( lcc.is_valid() );
+    Dart_handle dh19 = lcc.insert_point_in_cell<1>(lcc.beta(lcc.beta(dh6, 1), 1), Point(x+lx, y+1, z+0.2));
+    Dart_handle dh20 = lcc.insert_point_in_cell<1>(lcc.beta(lcc.beta(dh6, 1), 1), Point(x + lx, y+1, z + lz - 0.2));
+    Dart_handle dh21 = lcc.insert_point_in_cell<1>(dh6, Point(x, y+1, z+0.2));
+    Dart_handle dh22 = lcc.insert_point_in_cell<1>(dh6,Point(x, y+1, z + lz - 0.2));
+
+    // on relie ces quatres points
+    Dart_handle dh24 = lcc.insert_cell_1_in_cell_2(dh22, dh20);
+    // Dart_handle dh23 = lcc.insert_cell_1_in_cell_2(dh19, dh21);
+
     //  const Point& i0=(Point(x , y , z));
     //  const Point& i1=(Point(x+lx , y , z));
     //  const Point& i2=(Point(x+lx , y , z+lz));
@@ -85,4 +113,3 @@ void immeuble::toit (float x, float y, float z, float lx, float ly, float lz, LC
     ib.end_surface();
 
 }
-
