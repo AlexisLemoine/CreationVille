@@ -44,7 +44,7 @@ void elementVille::creerrue (float x, float z, float l, bool orientation, MyGrid
         creerroute (x, z, l, orientation, tab, lcc);
         int p, q, r, lx, lz, cases, imm;
         bool good;
-        for (int i=0; i<5; i++) {
+        for (int i=0; i<2; i++) {
             imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
             while (good == false){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
@@ -190,15 +190,27 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
 
     //on génère un quadrillage de routes au milieu du quartier
 
-    for (int i=5; i<dim; i+=5) {
+    for (int i=5; i<dim; i+=8) {
         // creerroute(6, 0, dim, false, tab, lcc);
         // creerroute(10, 0, dim, false, tab, lcc);
         // creerroute(14, 0, dim, false, tab, lcc);
         // creerroute(20, 0, dim, false, tab, lcc);
         // creerroute(0, 15 , dim, true, tab, lcc);
         // creerroute(0, 30, dim, true, tab, lcc);
-        creerrue(i, 0, dim, false, tab, lcc);
-        creerrue(0, i , dim, true, tab, lcc);
+        int compteur = 0;
+        for (int j=0; j<dim; j++) {
+            if (tab[i][j]==1) {
+                compteur += 1;
+            }
+        }    
+        if (compteur == 0) creerrue(i, 0, dim, false, tab, lcc);
+        compteur = 0;
+        for (int j=0; j<dim; j++) {
+            if (tab[j][i]==1) {
+                compteur += 1;
+            }
+        }   
+        if (compteur == 0) creerrue(0, i , dim, true, tab, lcc);
     }
         // creerrue(0, 9, dim, true, tab, lcc);
         // creerrue(14, 0, dim, false, tab, lcc);
@@ -208,7 +220,7 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
     for (int i=0; i<nb; i++) {
         int imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
         good = false;
-        while (good == false){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
+        while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
             //ici les coordonées sont entre 0 et 11 en x et z, et les longueurs des batiments entre 1 et 3
             x = rand()%45; 
             z = rand()%45;
@@ -217,33 +229,23 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
             std::cout<<x<<" "<<z<<" "<<lx<<" "<<lz<<"\n";
             cases=0;
 
-            //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
-            /*for (int j=x; j<x+lx; j++) {
-                for (int k=z; k<z+lz; k++) {
-                    if (tab[j][k]==0) {
-                        tab[j][k]=1;
-                    }
-                    else cases += 1; //on compte le nombre de cases occupées par le batiment qui sont libres, si ce nombre n'est pas égal à 0, on relance
-                }
-            }*/
-
-            ///////////////////////////////////////////////////////////////////
-          for (int j=x; j<x+lx; j++) {
+        //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
+            for (int j=x; j<x+lx; j++) {
                 for (int k=z; k<z+lz; k++) {
                     if (tab[j][k]!=0) {
                         cases += 1;
                     }
                 }
             }
-            if (cases==0) {
+        //si toutes les cases sont disponibles pour poser un batiments, on les place dans le terrain et dans le tableau virtuel
+            good = (cases==0);
+            if (good) {
                 for (int j=x; j<x+lx; j++) {
                     for (int k=z; k<z+lz; k++) {
                             tab[j][k]=1;
                     }
                 }
             }
-          ////////////////////////////////////////////////////////////////////
-            good = (cases==0);
         }
         if (imm==0) {
             creermaison(x, z, lx, lz, lcc);
