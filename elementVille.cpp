@@ -40,15 +40,14 @@ void elementVille::creerrue (float x, float z, float l, bool orientation, MyGrid
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
     if ((orientation && x+l<=dim) || (!orientation && z+l<=dim)) {
-        //les 4 angles de la route
         creerroute (x, z, l, orientation, tab, lcc);
         int p, q, r, lx, lz, cases, imm;
         bool good;
-        for (int i=0; i<2; i++) {
+        for (int i=0; i<8; i++) {
             imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
-            while (good == false){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
-                if (orientation==true) { //cas pour une route horizontale
+            while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
+                if (orientation) { //cas pour une route horizontale
                     //ici les coordonées sont tirées parmi les cases collées à la route, et les longueurs des batiments entre 1 et 3
                     p = x + rand()%(int)(l-3); 
                     q = z + (rand()%2)*2 - 1;
@@ -77,7 +76,7 @@ void elementVille::creerrue (float x, float z, float l, bool orientation, MyGrid
                     }
                 }
                 
-                if (orientation==false) { //cas pour une route verticale
+                if (!orientation) { //cas pour une route verticale
                     //ici les coordonées sont tirées parmi les cases collées à la route, et les longueurs des batiments entre 1 et 3
                     p = x + (rand()%2)*2 - 1;
                     q = z + rand()%(int)(l-3); 
@@ -189,14 +188,12 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
     float x, lx, z, lz;
 
     //on génère un quadrillage de routes au milieu du quartier
+    for (int i=5; i<dim-5; i+=4) {
+        creerroute(i, 0, dim, false, tab, lcc);
+        creerroute(0, i, dim, true, tab, lcc);
+    }
 
-    for (int i=5; i<dim; i+=8) {
-        // creerroute(6, 0, dim, false, tab, lcc);
-        // creerroute(10, 0, dim, false, tab, lcc);
-        // creerroute(14, 0, dim, false, tab, lcc);
-        // creerroute(20, 0, dim, false, tab, lcc);
-        // creerroute(0, 15 , dim, true, tab, lcc);
-        // creerroute(0, 30, dim, true, tab, lcc);
+    for (int i=5; i<dim-5; i+=4) {
         int compteur = 0;
         for (int j=0; j<dim; j++) {
             if (tab[i][j]==1) {
