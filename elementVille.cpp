@@ -1,6 +1,7 @@
 #include <CGAL/Linear_cell_complex_for_combinatorial_map.h>
 #include <CGAL/draw_linear_cell_complex.h>
 #include "My_linear_cell_complex_incremental_builder.h"
+#include "lcc_creations.h"
 #include "elementVille.h"
 #include "immeuble.h"
 
@@ -8,6 +9,40 @@ typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Dart_handle Dart_handle;
 typedef LCC::Point Point;
 
+
+struct Volume
+{
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
+  std::string type;
+};
+struct Myitem
+{
+  template<class Refs>
+  struct Dart_wrapper
+  {
+    typedef CGAL::Cell_attribute_with_point< Refs, int, CGAL::Tag_true,
+                                             Volume >
+    Vertex_attribute;
+    typedef std::tuple<Vertex_attribute> Attributes;
+  };
+};
+typedef CGAL::Linear_cell_complex_traits<3, CGAL::Exact_predicates_inexact_constructions_kernel> Traits;
+typedef CGAL::Linear_cell_complex_for_combinatorial_map<3,3,Traits,Volume> LCC_3;
+
+
+void elementVille::creerGrille(LCC& lcc,
+                                    const typename LCC::Point basepoint,
+                                   typename LCC::FT sx,
+                                   typename LCC::FT sy,
+                                   std::size_t nbx,
+                                   std::size_t nby) 
+{
+    std::cout<<"ça marche \n";
+    make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
+    std::cout<<"ça marche pas \n";
+}
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
 void elementVille::creerroute (float x, float z, float l, bool orientation, MyGrid& tab, LCC& lcc) {
@@ -43,7 +78,7 @@ void elementVille::creerrue (float x, float z, float l, bool orientation, MyGrid
         creerroute (x, z, l, orientation, tab, lcc);
         int p, q, r, lx, lz, cases, imm;
         bool good;
-        for (int i=0; i<8; i++) {
+        for (int i=0; i<10; i++) {
             imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
             while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
@@ -129,39 +164,47 @@ void elementVille::creerimmeuble (float x, float z, float lx, float lz, int etg,
 
 //On créé et on affiche une maison, aux coordonnées (x,z), de longueur lx sur l'axe x, lz sur l'axe z
 //Pour cela, on fait appel à la fonction étage qui vient créé un étage, auquel on rajoute un toit en faisant appel à la fonction du même nom
+
 void elementVille::creermaison (float x, float z, float lx, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ibb(lcc);
     //MAISON EN FONCTION DES PARAMETRES
     immeuble j;
-    j.etage (x, 0, z, lx, lz, lcc);
-    j.toit (x, 1, z, lx, 0.5, lz, lcc);
+    std::cout<<"je rentre \n";
+    Dart_handle dh1 = j.etage (x, 0, z, lx, lz, lcc);
+    Dart_handle dh = lcc.beta(dh1, 1);
+    Dart_handle dh2 = j.toit (x, 2, z, lx, 0.5, lz, lcc);
+    lcc.sew<3>(dh1, lcc.beta(dh2, 2));
+    // lcc.sew<2>(lcc.beta(dh1, 1, 2, 1, 1), lcc.beta(dh2, 2, 1));
+    // //return j.etage (x, 0, z, lx, lz, lcc);
+    // j.etage (x, 0, z, lx, lz, lcc);
+    // j.toit (x, 2, z, lx, 0.5, lz, lcc);
 
-    //MAISON FIXE
-    //8 sommets d'un cube
-  ibb.add_vertex(Point(0,0,0));
-  ibb.add_vertex(Point(0,1,0));
-  ibb.add_vertex(Point(0,0,1));
-  ibb.add_vertex(Point(0,1,1));
-  ibb.add_vertex(Point(1,0,0));
-  ibb.add_vertex(Point(1,1,0));
-  ibb.add_vertex(Point(1,0,1));
-  ibb.add_vertex(Point(1,1,1));
-    //sommet d'un toit
-  ibb.add_vertex(Point(.5,1.5,.5));
-  ibb.begin_surface();
-  //on créé les faces du cube
-  ibb.add_facet({0,1,3,2});
-  ibb.add_facet({4,6,7,5});
-  ibb.add_facet({1,0,4,5});
-  ibb.add_facet({6,2,3,7});
-  ibb.add_facet({2,6,4,0});
-//  ibb.add_facet({3,1,5,7});
-  //on crée le toit
-  ibb.add_facet({1,8,3});
-  ibb.add_facet({7,3,8});
-  ibb.add_facet({5,7,8});
-  ibb.add_facet({5,8,1});
-  ibb.end_surface();
+//     //MAISON FIXE
+//     //8 sommets d'un cube
+//   ibb.add_vertex(Point(0,0,0));
+//   ibb.add_vertex(Point(0,1,0));
+//   ibb.add_vertex(Point(0,0,1));
+//   ibb.add_vertex(Point(0,1,1));
+//   ibb.add_vertex(Point(1,0,0));
+//   ibb.add_vertex(Point(1,1,0));
+//   ibb.add_vertex(Point(1,0,1));
+//   ibb.add_vertex(Point(1,1,1));
+//     //sommet d'un toit
+//   ibb.add_vertex(Point(.5,1.5,.5));
+//   ibb.begin_surface();
+//   //on créé les faces du cube
+//   ibb.add_facet({0,1,3,2});
+//   ibb.add_facet({4,6,7,5});
+//   ibb.add_facet({1,0,4,5});
+//   ibb.add_facet({6,2,3,7});
+//   ibb.add_facet({2,6,4,0});
+// //  ibb.add_facet({3,1,5,7});
+//   //on crée le toit
+//   ibb.add_facet({1,8,3});
+//   ibb.add_facet({7,3,8});
+//   ibb.add_facet({5,7,8});
+//   ibb.add_facet({5,8,1});
+//   ibb.end_surface();
 }
 
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier

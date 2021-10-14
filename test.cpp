@@ -1,6 +1,7 @@
 #include <CGAL/Linear_cell_complex_for_combinatorial_map.h>
 #include <CGAL/draw_linear_cell_complex.h>
 #include "My_linear_cell_complex_incremental_builder.h"
+#include "lcc_creations.h"
 #include "elementVille.h"
 
 typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
@@ -12,8 +13,9 @@ int main()
   LCC lcc;
   elementVille M, I;
   M.creermaison (-5,-5,3,2,lcc);
-  I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
-  M.genererquartier(0, 50, lcc);
+  //I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
+  //I.creerGrille(lcc, Point(0,0,0), 50, 50, 50, 50);
+  //M.genererquartier(0, 30, lcc);
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
