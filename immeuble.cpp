@@ -112,7 +112,7 @@ Dart_handle immeuble::toit (float x, float y, float z, float lx, float ly, float
     ib.add_facet({2,0,4});
     ib.add_facet({3,2,4});
     ib.add_facet({1,3,4});
-    Dart_handle dh = ib.add_facet({1,0,2,3});
+    ib.add_facet({1,0,2,3});
     //Dart_handle dh2 = lcc.insert_point_in_cell<1>(dh, Point(x, y, z + .2));
     return ib.end_surface();
 
