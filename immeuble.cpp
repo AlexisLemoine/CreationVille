@@ -8,12 +8,23 @@ typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Point Point;
 typedef LCC::Dart_handle Dart_handle;
 
-void immeuble::murCote (LCC& lcc, Dart_handle D){
+void immeuble::murCoteGauche (LCC& lcc, Dart_handle D){
     Point p1 = lcc.point(D); // Pour avoir le debut du brin
     Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
-    // std::cout<<p1.x();
-    // float lx,lz =
-    // Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(p1.x(),p1.y(),p1.z()+lz-0.2));
+
+    Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(p1.x(), p1.y(), p1.z()-0.2));
+    Dart_handle dh2 = lcc.insert_point_in_cell<1>(dh1, Point(p1.x(), p1.y(), p2.z()+0.2));
+
+
+    Point p3 = lcc.point(lcc.beta(lcc.beta(dh2, 1), 1));
+    Point p4 = lcc.point(lcc.other_extremity(lcc.beta(lcc.beta(dh2, 1), 1)));
+
+    Dart_handle dh3= lcc.insert_point_in_cell<1>((lcc.beta(lcc.beta(dh2, 1), 1)), Point(p3.x(), p3.y(), p3.z()+0.2));
+    Dart_handle dh4 = lcc.insert_point_in_cell<1>(dh3, Point(p3.x(), p3.y(), p4.z()-0.2));
+
+    Dart_handle dh5 = lcc.insert_cell_1_in_cell_2(dh4, dh1);
+    Dart_handle dh6 = lcc.insert_cell_1_in_cell_2(dh2, dh3);
+
 }
 
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
@@ -38,7 +49,6 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     Dart_handle dh5 = ib.add_facet({2,6,4,0});
     Dart_handle dh6 = ib.add_facet({3,1,5,7});
 
-<<<<<<< HEAD
     // création des points et traits a l'intérieur de la face du bas :
 
     // création de 4 points sur les arrètes
@@ -91,11 +101,11 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     Dart_handle dh28 = lcc.insert_point_in_cell<1>(dh27,Point(x+lx-0.2, y+1, z +lz- 0.2));
 
     // on relie ces 4 nouveaux points
-    Dart_handle dh29 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh25,2), lcc.beta(dh24,2));
+    Dart_handle dh29 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh24,2), lcc.beta(dh25,2));
     Dart_handle dh30 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh23,2), lcc.beta(dh27, 2));
 
-    murCote (lcc, lcc.beta(dh1, 0));
-    murCote (lcc, dh2);
+    murCoteGauche (lcc, lcc.beta(dh1, 0));
+    //murCoteDroit (lcc, dh2);
 
     //  const Point& i0=(Point(x , y , z));
     //  const Point& i1=(Point(x+lx , y , z));
@@ -108,7 +118,6 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     //  make_hexahedron_with_builder(ib, i0, i1, i2, i3, i4, i5, i6, i7)
 
     ib.end_surface();
-=======
     // Pour insérer les points sur les surfaces et créer des murs
     /*lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y, z + lz));
     lcc.insert_point_in_cell<1>(dh4,Point(x + lx - 0.2, y, z + lz));
@@ -172,7 +181,6 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     // //  make_hexahedron_with_builder(ib, i0, i1, i2, i3, i4, i5, i6, i7)
 
     return ib.end_surface();
->>>>>>> c962d6a5db430421f1adf4e99841da21cfa592e6
 }
 
 //Créé les 4 pentes d'un toit de type pyramide aux coordonnées (x,y,z), de longueur lx, lz, et de hauteur à la pointe ly
