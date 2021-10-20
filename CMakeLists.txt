@@ -22,6 +22,7 @@ endif()
 add_executable(
   MyExec
   My_linear_cell_complex_incremental_builder.h
+  lcc_creations.h
   elementVille.h
   immeuble.h
   elementVille.cpp
