@@ -25,7 +25,6 @@ add_executable(
   elementVille.h
   immeuble.h
   elementVille.cpp
-  immeuble.cpp
-  test.cpp)
+  immeuble.cpp)
 
 target_link_libraries(MyExec PUBLIC CGAL::CGAL CGAL::CGAL_Qt5)
