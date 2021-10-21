@@ -32,7 +32,7 @@ typedef CGAL::Linear_cell_complex_traits<3, CGAL::Exact_predicates_inexact_const
 typedef CGAL::Linear_cell_complex_for_combinatorial_map<3,3,Traits,Volume> LCC_3;
 
 
-Dart_handle elementVille::creerGrille(LCC& lcc,
+GridDH elementVille::creerGrille(LCC& lcc,
                                     const typename LCC::Point basepoint,
                                    typename LCC::FT sx,
                                    typename LCC::FT sy,
@@ -40,7 +40,15 @@ Dart_handle elementVille::creerGrille(LCC& lcc,
                                    std::size_t nby) 
 {
     std::cout<<"ça marche \n";
-    return make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
+    GridDH tabDH(sx,std::vector<Dart_handle>(sy,NULL));
+    tabDH[0][0] = make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
+    for (int i=0; i<nby; i++) {
+        for (int j=0; j<nbx; j++) {
+            if (j==0 && i>0) tabDH[i][j]=lcc.beta(tabDH[i-1][j], 1, 2, 1);
+            if (j>0) tabDH[i][j] = lcc.beta(tabDH[i][j-1], 1, 1, 2);
+        }
+    }
+    return tabDH;
     std::cout<<"ça marche pas \n";
 }
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
@@ -50,31 +58,22 @@ void elementVille::creerroute (float x, float z, float l, bool orientation, MyGr
     //les 4 angles de la route
     ib.add_vertex(Point(x, 0, z));
     if (orientation) {
-        ib.add_vertex(Point(x, 0, z+1));
-        ib.add_vertex(Point(x+l, 0, z+1));
         ib.add_vertex(Point(x+l, 0, z));
+        ib.add_vertex(Point(x+l, 0, z+1));
+        ib.add_vertex(Point(x, 0, z+1));
         for (int i=0; i<l; i++) {
             tab[(int)x+i][(int)z]=2;
         }
-        Dart_handle dh = ib.add_facet({0,1,2,3});
-        for (int i=1; i<l; i++) {
-            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x + i, 0, z));
-            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x + i, 0, z+1));
-        }
     }
     else {
-        ib.add_vertex(Point(x, 0, z+l));
-        ib.add_vertex(Point(x+1, 0, z+l));
         ib.add_vertex(Point(x+1, 0, z));
+        ib.add_vertex(Point(x+1, 0, z+l));
+        ib.add_vertex(Point(x, 0, z+l));
         for (int i=0; i<l; i++) {
             tab[(int)x][(int)z + i]=2;
         }
-        Dart_handle dh = ib.add_facet({0,1,2,3});
-        for (int i=1; i<l; i++) {
-            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x, 0, z+i));
-            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x+1, 0, z+i));
-        }
     }
+    ib.add_facet({0,1,2,3});
     ib.end_surface();
 }
 

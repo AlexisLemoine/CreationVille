@@ -8,12 +8,6 @@ typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Point Point;
 typedef LCC::Dart_handle Dart_handle;
 
-void immeuble::murCote (LCC& lcc, Dart_handle D){
-    Point p1 = lcc.point(D); // Pour avoir le debut du brin
-    Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
-    // std::cout<<p1.x();
-    // float lx,lz =
-    // Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(p1.x(),p1.y(),p1.z()+lz-0.2));
 void immeuble::murCoteGauche (LCC& lcc, Dart_handle D){
     Point p1 = lcc.point(D); // Pour avoir le debut du brin
     Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
@@ -107,11 +101,6 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     Dart_handle dh28 = lcc.insert_point_in_cell<1>(dh27,Point(x+lx-0.2, y+1, z +lz- 0.2));
 
     // on relie ces 4 nouveaux points
-    Dart_handle dh29 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh25,2), lcc.beta(dh24,2));
-    Dart_handle dh30 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh23,2), lcc.beta(dh27, 2));
-
-    murCote (lcc, lcc.beta(dh1, 0));
-    murCote (lcc, dh2);
     Dart_handle dh29 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh24,2), lcc.beta(dh25,2));
     Dart_handle dh30 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh23,2), lcc.beta(dh27, 2));
 
