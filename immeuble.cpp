@@ -8,22 +8,18 @@ typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Point Point;
 typedef LCC::Dart_handle Dart_handle;
 
-void immeuble::murCoteGauche (LCC& lcc, Dart_handle D){
-    Point p1 = lcc.point(D); // Pour avoir le debut du brin
-    Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
+void immeuble::murCote (LCC& lcc, Dart_handle D){
+    // Point p1 = lcc.point(D); // Pour avoir le debut du brin
+    // Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
 
-    Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(p1.x(), p1.y(), p1.z()-0.2));
-    Dart_handle dh2 = lcc.insert_point_in_cell<1>(dh1, Point(p1.x(), p1.y(), p2.z()+0.2));
+    Dart_handle dh1 = lcc.beta(D, 1);
+    Dart_handle dh4 = lcc.beta(lcc.beta(D, 0), 0);
 
+    Dart_handle dh2 = lcc.beta(lcc.beta(D, 1),1);
+    Dart_handle dh3 = lcc.beta(dh4, 0);
 
-    Point p3 = lcc.point(lcc.beta(lcc.beta(dh2, 1), 1));
-    Point p4 = lcc.point(lcc.other_extremity(lcc.beta(lcc.beta(dh2, 1), 1)));
-
-    Dart_handle dh3= lcc.insert_point_in_cell<1>((lcc.beta(lcc.beta(dh2, 1), 1)), Point(p3.x(), p3.y(), p3.z()+0.2));
-    Dart_handle dh4 = lcc.insert_point_in_cell<1>(dh3, Point(p3.x(), p3.y(), p4.z()-0.2));
-
-    Dart_handle dh5 = lcc.insert_cell_1_in_cell_2(dh4, dh1);
-    Dart_handle dh6 = lcc.insert_cell_1_in_cell_2(dh2, dh3);
+    Dart_handle dh6 = lcc.insert_cell_1_in_cell_2(dh4, dh1);
+    Dart_handle dh5 = lcc.insert_cell_1_in_cell_2(dh2, dh3);
 
 }
 
@@ -72,16 +68,6 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     Dart_handle dh17 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh11,2), lcc.beta(dh16,2));
     Dart_handle dh18 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh12,2), lcc.beta(dh14, 2));
 
-
-    // lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y + 1, z + lz));
-    // lcc.insert_point_in_cell<1>(dh4,Point(x + lx - 0.2, y + 1, z + lz));
-    // lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + 0.2));
-    // lcc.insert_point_in_cell<1>(lcc.beta(lcc.beta(dh6, 1), 1),Point(x + lx, y + 1, z + lz - 0.2));
-    // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1), Point(x + 0.2, y + 1, z));
-    // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1),Point(x + lx - 0.2, y + 1, z));
-    // lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y + 1, z + 0.2));
-    // lcc.insert_point_in_cell<1>(dh6, Point(x, y + 1, z + lz - 0.2));
-
     // on fait la même chose pour la face du haut :
 
     // création de 4 points sur la face du haut :
@@ -104,81 +90,10 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     Dart_handle dh29 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh24,2), lcc.beta(dh25,2));
     Dart_handle dh30 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh23,2), lcc.beta(dh27, 2));
 
-    murCoteGauche (lcc, lcc.beta(dh1, 0));
-    //murCoteDroit (lcc, dh2);
-
-    //  const Point& i0=(Point(x , y , z));
-    //  const Point& i1=(Point(x+lx , y , z));
-    //  const Point& i2=(Point(x+lx , y , z+lz));
-    //  const Point& i3=(Point(x , y , z+lz));
-    //  const Point& i4=(Point(x , y+1 , z));
-    //  const Point& i5=(Point(x+lx , y+1 , z));
-    //  const Point& i6=(Point(x+lx , y+1 , z+lz));
-    //  const Point& i7=(Point(x , y+1 , z+lz));
-    //  make_hexahedron_with_builder(ib, i0, i1, i2, i3, i4, i5, i6, i7)
+    murCote (lcc, lcc.beta(lcc.beta(lcc.beta(dh1, 0), 0), 0));
+    murCote (lcc, dh2);
 
     ib.end_surface();
-    // Pour insérer les points sur les surfaces et créer des murs
-    /*lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y, z + lz));
-    lcc.insert_point_in_cell<1>(dh4,Point(x + lx - 0.2, y, z + lz));
-    lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y, z + 0.2));
-    lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1), Point(x + 0.2, y, z));
-    lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1),Point(x + lx - 0.2, y, z));
-    lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y, z + 0.2));*/
-
-    // // création des points et traits a l'intérieur de la face du bas :
-
-    // // création de 4 points sur les arrètes
-    // Dart_handle dh7 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 1), Point(x + lx, y, z + lz - 0.2));
-    // Dart_handle dh9 = lcc.insert_point_in_cell<1>(dh7, Point(x+lx, y, z+0.2));
-    // Dart_handle dh10 = lcc.insert_point_in_cell<1>(lcc.beta(dh5, 0), Point(x, y, z+0.2));
-    // Dart_handle dh8 = lcc.insert_point_in_cell<1>(dh10,Point(x, y, z + lz - 0.2));
-
-    // // on relie ces quatres points
-    // Dart_handle dh11 = lcc.insert_cell_1_in_cell_2(dh8, dh7);
-    // Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(dh9, dh10);
-
-    // // on pose 4 points sur les nouvelles lignes
-
-    // Dart_handle dh14 = lcc.insert_point_in_cell<1>(dh11, Point(x+lx-0.2, y, z+lz-0.2));
-    // Dart_handle dh13 = lcc.insert_point_in_cell<1>(dh14, Point(x+0.2, y, z+lz-0.2));
-    // Dart_handle dh16 = lcc.insert_point_in_cell<1>(dh12, Point(x+0.2, y, z+0.2));
-    // Dart_handle dh15 = lcc.insert_point_in_cell<1>(dh16, Point(x+lx-0.2, y, z+0.2));
-
-    // // on relie ces quatres nouveaux points.
-    // Dart_handle dh17 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh11,2), lcc.beta(dh16,2));
-    // Dart_handle dh18 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh12,2), lcc.beta(dh14, 2));
-
-
-    // // lcc.insert_point_in_cell<1>(dh4,Point(x + 0.2, y + 1, z + lz));
-    // // lcc.insert_point_in_cell<1>(dh4,Point(x + lx - 0.2, y + 1, z + lz));
-    // // lcc.insert_point_in_cell<1>(dh2,Point(x + lx, y + 1, z + 0.2));
-    // // lcc.insert_point_in_cell<1>(lcc.beta(lcc.beta(dh6, 1), 1),Point(x + lx, y + 1, z + lz - 0.2));
-    // // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1), Point(x + 0.2, y + 1, z));
-    // // lcc.insert_point_in_cell<1>(lcc.beta(dh3, 1),Point(x + lx - 0.2, y + 1, z));
-    // // lcc.insert_point_in_cell<1>(lcc.beta(dh1, 0),Point(x, y + 1, z + 0.2));
-    // // lcc.insert_point_in_cell<1>(dh6, Point(x, y + 1, z + lz - 0.2));
-
-    // // on fait la même chose pour la face du haut :
-
-    // Dart_handle dh19 = lcc.insert_point_in_cell<1>(lcc.beta(lcc.beta(dh6, 1), 1), Point(x+lx, y+1, z+0.2));
-    // Dart_handle dh20 = lcc.insert_point_in_cell<1>(lcc.beta(lcc.beta(dh6, 1), 1), Point(x + lx, y+1, z + lz - 0.2));
-    // Dart_handle dh21 = lcc.insert_point_in_cell<1>(dh6, Point(x, y+1, z+0.2));
-    // Dart_handle dh22 = lcc.insert_point_in_cell<1>(dh6,Point(x, y+1, z + lz - 0.2));
-
-    // // on relie ces quatres points
-    // Dart_handle dh24 = lcc.insert_cell_1_in_cell_2(dh22, dh20);
-    // // Dart_handle dh23 = lcc.insert_cell_1_in_cell_2(dh19, dh21);
-
-    // //  const Point& i0=(Point(x , y , z));
-    // //  const Point& i1=(Point(x+lx , y , z));
-    // //  const Point& i2=(Point(x+lx , y , z+lz));
-    // //  const Point& i3=(Point(x , y , z+lz));
-    // //  const Point& i4=(Point(x , y+1 , z));
-    // //  const Point& i5=(Point(x+lx , y+1 , z));
-    // //  const Point& i6=(Point(x+lx , y+1 , z+lz));
-    // //  const Point& i7=(Point(x , y+1 , z+lz));
-    // //  make_hexahedron_with_builder(ib, i0, i1, i2, i3, i4, i5, i6, i7)
 
     return ib.end_surface();
 }
