@@ -32,7 +32,7 @@ typedef CGAL::Linear_cell_complex_traits<3, CGAL::Exact_predicates_inexact_const
 typedef CGAL::Linear_cell_complex_for_combinatorial_map<3,3,Traits,Volume> LCC_3;
 
 
-void elementVille::creerGrille(LCC& lcc,
+Dart_handle elementVille::creerGrille(LCC& lcc,
                                     const typename LCC::Point basepoint,
                                    typename LCC::FT sx,
                                    typename LCC::FT sy,
@@ -40,7 +40,7 @@ void elementVille::creerGrille(LCC& lcc,
                                    std::size_t nby) 
 {
     std::cout<<"ça marche \n";
-    make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
+    return make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
     std::cout<<"ça marche pas \n";
 }
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
@@ -165,15 +165,16 @@ void elementVille::creerimmeuble (float x, float z, float lx, float lz, int etg,
 //On créé et on affiche une maison, aux coordonnées (x,z), de longueur lx sur l'axe x, lz sur l'axe z
 //Pour cela, on fait appel à la fonction étage qui vient créé un étage, auquel on rajoute un toit en faisant appel à la fonction du même nom
 
-void elementVille::creermaison (float x, float z, float lx, float lz, LCC& lcc) {
+Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ibb(lcc);
     //MAISON EN FONCTION DES PARAMETRES
     immeuble j;
     std::cout<<"je rentre \n";
     Dart_handle dh1 = j.etage (x, 0, z, lx, lz, lcc);
     Dart_handle dh = lcc.beta(dh1, 1);
-    Dart_handle dh2 = j.toit (x, 2, z, lx, 0.5, lz, lcc);
-    lcc.sew<3>(dh1, lcc.beta(dh2, 1));
+    Dart_handle dh2 = j.toit (x, 1, z, lx, 0.5, lz, lcc);
+    //lcc.sew<3>(dh1, lcc.beta(dh2, 1));
+    return lcc.beta(dh1, 2, 1, 1, 2);
     // lcc.sew<2>(lcc.beta(dh1, 1, 2, 1, 1), lcc.beta(dh2, 2, 1));
     // //return j.etage (x, 0, z, lx, lz, lcc);
     // j.etage (x, 0, z, lx, lz, lcc);

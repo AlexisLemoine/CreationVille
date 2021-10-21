@@ -12,10 +12,22 @@ int main()
 {
   LCC lcc;
   elementVille M, I;
-  M.creermaison (-5,-5,3,2,lcc);
+  // Dart_handle dh1 = M.creermaison (-5, -5, 3, 2,lcc);
   //I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
-  //I.creerGrille(lcc, Point(0,0,0), 50, 50, 50, 50);
-  //M.genererquartier(0, 30, lcc);
+
+  Dart_handle dh2 = I.creerGrille(lcc, Point(0,0,0), 5, 5, 5, 5);
+  lcc.remove_cell<1>(lcc.beta(dh2, 1, 1, 2, 1, 1, 2, 1));
+  lcc.remove_cell<1>(lcc.beta(dh2, 1, 2, 0, 2, 1, 1));
+  lcc.remove_cell<1>(lcc.beta(dh2, 1, 1, 2, 1, 1, 2));
+  lcc.remove_cell<1>(lcc.beta(dh2, 1, 1, 2, 1));
+  lcc.remove_cell<1>(lcc.beta(dh2, 1, 2, 0));
+  lcc.remove_cell<1>(lcc.beta(dh2, 1, 1));
+  lcc.remove_cell<1>(lcc.beta(dh2, 1));
+
+  //lcc.remove_cell<0>(lcc.beta(dh2, 1, 1));
+  //lcc.sew<3>(dh1, dh2);
+
+  // M.genererquartier(0, 30, lcc);
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
