@@ -8,6 +8,7 @@ class immeuble
 {
 public:
     // immeuble();
+    Dart_handle plancher(float x, float y, float z, float lx, float lz, LCC& lcc);
     void murCote (LCC& lcc, Dart_handle D);
    Dart_handle etage (float x, float y, float z, float lx, float lz, LCC& lcc);
    Dart_handle toit (float x, float y, float z, float lx, float ly, float lz, LCC& lcc);
