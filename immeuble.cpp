@@ -14,6 +14,23 @@ void immeuble::murCote (LCC& lcc, Dart_handle D){
     // std::cout<<p1.x();
     // float lx,lz =
     // Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(p1.x(),p1.y(),p1.z()+lz-0.2));
+void immeuble::murCoteGauche (LCC& lcc, Dart_handle D){
+    Point p1 = lcc.point(D); // Pour avoir le debut du brin
+    Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
+
+    Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(p1.x(), p1.y(), p1.z()-0.2));
+    Dart_handle dh2 = lcc.insert_point_in_cell<1>(dh1, Point(p1.x(), p1.y(), p2.z()+0.2));
+
+
+    Point p3 = lcc.point(lcc.beta(lcc.beta(dh2, 1), 1));
+    Point p4 = lcc.point(lcc.other_extremity(lcc.beta(lcc.beta(dh2, 1), 1)));
+
+    Dart_handle dh3= lcc.insert_point_in_cell<1>((lcc.beta(lcc.beta(dh2, 1), 1)), Point(p3.x(), p3.y(), p3.z()+0.2));
+    Dart_handle dh4 = lcc.insert_point_in_cell<1>(dh3, Point(p3.x(), p3.y(), p4.z()-0.2));
+
+    Dart_handle dh5 = lcc.insert_cell_1_in_cell_2(dh4, dh1);
+    Dart_handle dh6 = lcc.insert_cell_1_in_cell_2(dh2, dh3);
+
 }
 
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
@@ -95,6 +112,11 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
 
     murCote (lcc, lcc.beta(dh1, 0));
     murCote (lcc, dh2);
+    Dart_handle dh29 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh24,2), lcc.beta(dh25,2));
+    Dart_handle dh30 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh23,2), lcc.beta(dh27, 2));
+
+    murCoteGauche (lcc, lcc.beta(dh1, 0));
+    //murCoteDroit (lcc, dh2);
 
     //  const Point& i0=(Point(x , y , z));
     //  const Point& i1=(Point(x+lx , y , z));

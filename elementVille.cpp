@@ -50,22 +50,31 @@ void elementVille::creerroute (float x, float z, float l, bool orientation, MyGr
     //les 4 angles de la route
     ib.add_vertex(Point(x, 0, z));
     if (orientation) {
-        ib.add_vertex(Point(x+l, 0, z));
-        ib.add_vertex(Point(x+l, 0, z+1));
         ib.add_vertex(Point(x, 0, z+1));
+        ib.add_vertex(Point(x+l, 0, z+1));
+        ib.add_vertex(Point(x+l, 0, z));
         for (int i=0; i<l; i++) {
             tab[(int)x+i][(int)z]=2;
         }
+        Dart_handle dh = ib.add_facet({0,1,2,3});
+        for (int i=1; i<l; i++) {
+            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x + i, 0, z));
+            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x + i, 0, z+1));
+        }
     }
     else {
-        ib.add_vertex(Point(x+1, 0, z));
-        ib.add_vertex(Point(x+1, 0, z+l));
         ib.add_vertex(Point(x, 0, z+l));
+        ib.add_vertex(Point(x+1, 0, z+l));
+        ib.add_vertex(Point(x+1, 0, z));
         for (int i=0; i<l; i++) {
             tab[(int)x][(int)z + i]=2;
         }
+        Dart_handle dh = ib.add_facet({0,1,2,3});
+        for (int i=1; i<l; i++) {
+            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x, 0, z+i));
+            lcc.insert_point_in_cell<1>(lcc.beta(dh, 1),Point(x+1, 0, z+i));
+        }
     }
-    ib.add_facet({0,1,2,3});
     ib.end_surface();
 }
 
