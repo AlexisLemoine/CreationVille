@@ -130,6 +130,47 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     return ib.end_surface();
 }
 
+
+Dart_handle immeuble::plancher(float x, float y, float z, float lx, float lz, LCC& lcc) {
+    My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
+    //8 sommets d'un cube
+    ib.add_vertex(Point(x , y , z));
+    ib.add_vertex(Point(x , y+.2 , z));
+    ib.add_vertex(Point(x , y , z+lz));
+    ib.add_vertex(Point(x , y+.2 , z+lz));
+    ib.add_vertex(Point(x+lx , y , z));
+    ib.add_vertex(Point(x+lx , y+.2 , z));
+    ib.add_vertex(Point(x+lx , y , z+lz));
+    ib.add_vertex(Point(x+lx , y+.2 , z+lz));
+    ib.begin_surface();
+    //on créé les faces du cube
+    ib.add_facet({0,1,3,2}); // quand on appelle dh1, on est sur l'arrête (0, 1). arrête au même endroit pour les autres dh.
+    ib.add_facet({4,6,7,5});
+    ib.add_facet({1,0,4,5});
+    ib.add_facet({6,2,3,7});
+    Dart_handle dh1 = ib.add_facet({2,6,4,0});
+    ib.add_facet({3,1,5,7});
+    ib.end_surface();
+    Dart_handle dh0 =lcc.beta(dh1, 0);
+    Dart_handle dh2 =lcc.beta(dh1, 1);
+    Dart_handle dh3 =lcc.beta(dh2, 1);
+    for (int i=1; i<=lx; i++) {
+        lcc.insert_point_in_cell<1>(dh0, Point(x, y, z+lz-i));
+    }
+    for (int i=1; i<=lx; i++) {
+        lcc.insert_point_in_cell<1>(dh1, Point(x+lx-i, y, z+lz));
+    }
+    for (int i=1; i<=lz; i++) {
+        lcc.insert_point_in_cell<1>(dh2, Point(x+lx, y, z+i));
+    }
+    for (int i=1; i<=lz; i++) {
+        lcc.insert_point_in_cell<1>(dh3, Point(x+i, y, z));
+    }
+return dh0;
+
+}
+
+
 //Créé les 4 pentes d'un toit de type pyramide aux coordonnées (x,y,z), de longueur lx, lz, et de hauteur à la pointe ly
 
 Dart_handle immeuble::toit (float x, float y, float z, float lx, float ly, float lz, LCC& lcc) {
