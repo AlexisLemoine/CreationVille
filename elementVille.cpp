@@ -44,8 +44,8 @@ GridDH elementVille::creerGrille(LCC& lcc,
     tabDH[0][0] = make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
     for (int i=0; i<nby; i++) {
         for (int j=0; j<nbx; j++) {
-            if (j==0 && i>0) tabDH[i][j]=lcc.beta(tabDH[i-1][j], 1, 2, 1);
-            if (j>0) tabDH[i][j] = lcc.beta(tabDH[i][j-1], 1, 1, 2);
+            if (j==0 && i>0) tabDH[j][i]=lcc.beta(tabDH[j][i-1], 1, 2, 1);
+            if (j>0) tabDH[j][i] = lcc.beta(tabDH[j-1][i], 1, 1, 2);
         }
     }
     return tabDH;
