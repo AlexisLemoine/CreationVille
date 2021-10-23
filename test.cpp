@@ -33,13 +33,13 @@ int main()
   lcc.remove_cell<1>(lcc.beta(dh3, 1, 1));
   lcc.remove_cell<1>(lcc.beta(dh3, 1));
 
-  // M.sewMaison(0, 0, 3, 2, lcc, tab);
+  M.sewMaison(0, 0, 3, 2, lcc, tab);
   // L.plancher(0, 1, 0, 3, 2, lcc);
 
   //lcc.remove_cell<0>(lcc.beta(dh2, 1, 1));
   //lcc.sew<3>(dh1, dh2);
 
-  // M.genererquartier(0, 30, lcc);
+  //M.genererquartier(0, 30, lcc);
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
