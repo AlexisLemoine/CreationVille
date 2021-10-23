@@ -181,7 +181,7 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC
     std::cout<<"je rentre \n";
     Dart_handle dh1 = j.etage (x, 0, z, lx, lz, lcc);
     Dart_handle dh = lcc.beta(dh1, 1);
-    Dart_handle dh2 = j.toit (x, 1, z, lx, 0.5, lz, lcc);
+    // Dart_handle dh2 = j.toit (x, 1, z, lx, 0.5, lz, lcc);
     //lcc.sew<3>(dh1, lcc.beta(dh2, 1));
     return lcc.beta(dh1, 2, 1, 1, 2);
     // lcc.sew<2>(lcc.beta(dh1, 1, 2, 1, 1), lcc.beta(dh2, 2, 1));
