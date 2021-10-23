@@ -159,16 +159,16 @@ Dart_handle immeuble::plancher(float x, float y, float z, float lx, float lz, LC
     Dart_handle dh0 =lcc.beta(dh1, 0);
     Dart_handle dh2 =lcc.beta(dh1, 1);
     Dart_handle dh3 =lcc.beta(dh2, 1);
-    for (int i=1; i<=lx; i++) {
+    for (int i=1; i<lz; i++) {
         lcc.insert_point_in_cell<1>(dh0, Point(x, y, z+lz-i));
     }
-    for (int i=1; i<=lx; i++) {
+    for (int i=1; i<lx; i++) {
         lcc.insert_point_in_cell<1>(dh1, Point(x+lx-i, y, z+lz));
     }
-    for (int i=1; i<=lz; i++) {
+    for (int i=1; i<lz; i++) {
         lcc.insert_point_in_cell<1>(dh2, Point(x+lx, y, z+i));
     }
-    for (int i=1; i<=lz; i++) {
+    for (int i=1; i<lx; i++) {
         lcc.insert_point_in_cell<1>(dh3, Point(x+i, y, z));
     }
 return dh0;
