@@ -16,8 +16,8 @@ int main()
   elementVille M, I;
   Dart_handle dh1 = M.creermaison (-5, -5, 3, 2,lcc);
   //I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
-  L.plancher(5, 0, 5, 4, 3, lcc);
-  GridDH tab = I.creerGrille(lcc, Point(0,0,0), 5, 5, 5, 5);
+  /* L.plancher(5, 0, 5, 4, 3, lcc);
+   GridDH tab = I.creerGrille(lcc, Point(0,0,0), 5, 5, 5, 5);
   Dart_handle dh2 = tab[0][0];
   lcc.remove_cell<1>(lcc.beta(dh2, 1, 1, 2, 1, 1, 2, 1));
   lcc.remove_cell<1>(lcc.beta(dh2, 1, 2, 0, 2, 1, 1));
@@ -31,7 +31,7 @@ int main()
   lcc.remove_cell<1>(lcc.beta(dh3, 1, 1, 2, 1));
   lcc.remove_cell<1>(lcc.beta(dh3, 1, 2, 0));
   lcc.remove_cell<1>(lcc.beta(dh3, 1, 1));
-  lcc.remove_cell<1>(lcc.beta(dh3, 1));
+  lcc.remove_cell<1>(lcc.beta(dh3, 1)); */
 
   //lcc.remove_cell<0>(lcc.beta(dh2, 1, 1));
   //lcc.sew<3>(dh1, dh2);

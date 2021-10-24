@@ -97,6 +97,7 @@ void immeuble::Haut(LCC& lcc, Dart_handle D){
 
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
+
 Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //8 sommets d'un cube
@@ -122,8 +123,50 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
 
     // création des points et traits a l'intérieur de la face du bas :
 
-    murCote (lcc, lcc.beta(lcc.beta(lcc.beta(dh1, 0), 0), 0));
+    murCote (lcc, lcc.beta(dh1, 0, 0, 0));
     murCote (lcc, dh2);
+
+    std::vector<Dart_handle> path;
+    path.push_back(lcc.beta(dh1, 1, 1));
+    path.push_back(lcc.beta(dh5, 0,0,0,2,1,1,2,0));
+    path.push_back(lcc.beta(dh5, 0,0,0,2,1,1,2));
+    path.push_back(lcc.beta(dh5, 0,0,0,2,1,1,2,1));
+
+    path.push_back(lcc.beta(dh2, 1));
+    path.push_back(lcc.beta(dh6, 1, 1,2,1,1,2,0));
+    path.push_back(lcc.beta(dh6, 1, 1,2,1,1,2));
+    path.push_back(lcc.beta(dh6, 1, 1,2,1,1,2,1));
+
+    Dart_handle dh7=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+    //Point p = lcc.point(lcc.beta(dh1,0,0,2, 3, 2,1,1,2));
+    //std ::cout << p.x() << " " << p.y() << " " << p.z();
+
+    std::vector<Dart_handle> path2;
+    path2.push_back(lcc.beta(dh1,0,0,2, 3, 2,1,1,2));
+    path2.push_back(lcc.beta(dh6,1));
+    path2.push_back(lcc.beta(dh6,1,1));
+    path2.push_back(lcc.beta(dh6,1,1,1));
+
+    path2.push_back(lcc.beta(dh2, 1,2, 3, 2,1,1,2));
+    path2.push_back(lcc.beta(dh5, 1,1));
+    path2.push_back(lcc.beta(dh5, 1,1,1));
+    path2.push_back(lcc.beta(dh5, 1,1,1,1));
+
+    Dart_handle dh8=lcc.insert_cell_2_in_cell_3(path2.begin(),path2.end());
+
+    Dart_handle dh9 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh7,1,1), lcc.beta(dh7, 0));
+    Dart_handle dh10 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh7,1,1,2,1,1), lcc.beta(dh7, 0,0,2,0));
+
+    Dart_handle dh11 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh8,1,1), lcc.beta(dh8, 0));
+    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh8,1,1,2,1,1), lcc.beta(dh8, 0,0,2,0));
+
+    /* std::vector<Dart_handle> path3;
+    path3.push_back(lcc.beta(dh9,2,1,2,3,2,1));
+    path3.push_back(lcc.beta(dh9,2));
+    path3.push_back(lcc.beta(dh9,2,0,2,3,2,0));
+    path3.push_back(dh11);
+
+    Dart_handle dh13=lcc.insert_cell_2_in_cell_3(path3.begin(),path3.end()); */
 
     ib.end_surface();
 
