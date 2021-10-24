@@ -8,6 +8,7 @@
 typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Dart_handle Dart_handle;
 typedef LCC::Point Point;
+typedef std::vector<std::vector<Dart_handle>> GridDH;
 
 
 struct Volume
@@ -214,6 +215,11 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC
 //   ibb.add_facet({5,7,8});
 //   ibb.add_facet({5,8,1});
 //   ibb.end_surface();
+}
+
+void elementVille::sewMaison(float x, float z, float lx, float lz, LCC& lcc, GridDH& grid) {
+    immeuble I;
+    lcc.sew<3>(grid[0][0], I.plancher(x, 0, z, lx, lz, lcc));
 }
 
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier
