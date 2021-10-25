@@ -45,9 +45,12 @@ GridDH elementVille::creerGrille(LCC& lcc,
     tabDH[0][0] = make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
     for (int i=0; i<nby; i++) {
         for (int j=0; j<nbx; j++) {
-            if (j==0 && i>0) tabDH[j][i]=lcc.beta(tabDH[j][i-1], 1, 2, 1);
+            if (j==0 && i>0) tabDH[j][i]=lcc.beta(tabDH[j][i-1], 0, 2, 0);
             if (j>0) tabDH[j][i] = lcc.beta(tabDH[j-1][i], 1, 1, 2);
+
+  std::cout<<i<<"    "<<j<<"     \n";
         }
+        std::cout<<" on sort \n";
     }
     return tabDH;
     std::cout<<"ça marche pas \n";
@@ -179,11 +182,11 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC
     //MAISON EN FONCTION DES PARAMETRES
     immeuble j;
     std::cout<<"je rentre \n";
-    Dart_handle dh1 = j.etage (x, 0, z, lx, lz, lcc);
-    Dart_handle dh = lcc.beta(dh1, 1);
+    // Dart_handle dh1 = j.etage (x, 0, z, lx, lz, lcc);
+    // Dart_handle dh = lcc.beta(dh1, 1);
     // Dart_handle dh2 = j.toit (x, 1, z, lx, 0.5, lz, lcc);
     //lcc.sew<3>(dh1, lcc.beta(dh2, 1));
-    return lcc.beta(dh1, 2, 1, 1, 2);
+    // return lcc.beta(dh1, 2, 1, 1, 2);
     // lcc.sew<2>(lcc.beta(dh1, 1, 2, 1, 1), lcc.beta(dh2, 2, 1));
     // //return j.etage (x, 0, z, lx, lz, lcc);
     // j.etage (x, 0, z, lx, lz, lcc);
@@ -219,7 +222,7 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC
 
 void elementVille::sewMaison(float x, float z, float lx, float lz, LCC& lcc, GridDH& grid) {
     immeuble I;
-    lcc.sew<3>(grid[0][0], I.plancher(x, 0, z, lx, lz, lcc));
+    lcc.sew<3>(grid[0][0], I.structMaison(x, 0, z, lx, lz, lcc));
 }
 
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier

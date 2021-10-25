@@ -98,7 +98,7 @@ void immeuble::Haut(LCC& lcc, Dart_handle D){
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
 
-Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
+std::vector<Dart_handle> immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //8 sommets d'un cube
     ib.add_vertex(Point(x , y , z));
@@ -117,9 +117,50 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
     Dart_handle dh4 = ib.add_facet({6,2,3,7});
     Dart_handle dh5 = ib.add_facet({2,6,4,0});
     Dart_handle dh6 = ib.add_facet({3,1,5,7});
+    ib.end_surface();
+    std::vector<Dart_handle> tab = {dh1, dh2, dh3, dh4, dh5, dh6};
+    return tab;
+}
+
+Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz, LCC& lcc) {
+    std::vector<Dart_handle> tab = etage (x, y+.2, z, lx, lz, lcc);
+    Dart_handle dh1 = tab[0];
+    Dart_handle dh2 = tab[1];
+    Dart_handle dh3 = tab[2];
+    Dart_handle dh4 = tab[3];
+    Dart_handle dh5 = tab[4];
+    Dart_handle dh6 = tab[5];
+
+    Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
+    Dart_handle roof = toit(x, y+1.2, z, lx, .5, lz, lcc);
+
+    lcc.sew<3>(lcc.beta(dh6, 1), roof);
+    lcc.sew<3>(lcc.beta(dh0, 2, 1, 1, 2), dh5);
+
+    Dart_handle dh02 =lcc.beta(dh0, 1);
+    Dart_handle dh03 =lcc.beta(dh02, 1);
+    Dart_handle dh01 =lcc.beta(dh03, 1);
+    for (int i=1; i<lz; i++) {
+        lcc.insert_point_in_cell<1>(dh01, Point(x, y, z+lz-i));
+        std::cout<<i <<" \n";
+    }
+    for (int i=1; i<lx; i++) {
+        lcc.insert_point_in_cell<1>(dh0, Point(x+lx-i, y, z+lz));
+        std::cout<<i <<" \n";
+    }
+    for (int i=1; i<lz; i++) {
+        lcc.insert_point_in_cell<1>(dh02, Point(x+lx, y, z+i));
+        std::cout<<i <<" \n";
+    }
+    for (int i=1; i<lx; i++) {
+        lcc.insert_point_in_cell<1>(dh03, Point(x+i, y, z));
+        std::cout<<i <<" \n";
+    }
+
 
     Bas(lcc, dh5);
     Haut(lcc, dh6); // utiliser un beta.
+
 
     // création des points et traits a l'intérieur de la face du bas :
 
@@ -168,9 +209,8 @@ Dart_handle immeuble::etage (float x, float y, float z, float lx, float lz, LCC&
 
     Dart_handle dh13=lcc.insert_cell_2_in_cell_3(path3.begin(),path3.end()); */
 
-    ib.end_surface();
 
-    return ib.end_surface();
+    return dh01;
 }
 
 
@@ -187,34 +227,15 @@ Dart_handle immeuble::plancher(float x, float y, float z, float lx, float lz, LC
     ib.add_vertex(Point(x+lx , y+.2 , z+lz));
     ib.begin_surface();
     //on créé les faces du cube
-    ib.add_facet({2,3,1,0}); // quand on appelle dh1, on est sur l'arrête (0, 1). arrête au même endroit pour les autres dh.
-    ib.add_facet({5,7,6,4});
-    ib.add_facet({5,4,0,1});
-    ib.add_facet({2,6,7,3});
-    Dart_handle dh1 = ib.add_facet({6,2,0,4});
-    ib.add_facet({3,7,5,1});
+    ib.add_facet({3,2,0,1}); // quand on appelle dh1, on est sur l'arrête (0, 1). arrête au même endroit pour les autres dh.
+    ib.add_facet({7,5,4,6});
+    ib.add_facet({4,5,1,0});
+    ib.add_facet({6,2,3,7});
+    Dart_handle dh1 = ib.add_facet({2,6,4,0});
+    ib.add_facet({3,1,5,7});
     ib.end_surface();
-    Dart_handle dh0 =lcc.beta(dh1, 1);
-    Dart_handle dh3 =lcc.beta(dh0, 1);
-    Dart_handle dh2 =lcc.beta(dh3, 1);
-    for (int i=1; i<lz; i++) {
-        lcc.insert_point_in_cell<1>(dh0, Point(x, y, z+i));
-        std::cout<<i <<" \n";
-    }
-    for (int i=1; i<lx; i++) {
-        lcc.insert_point_in_cell<1>(dh1, Point(x+i, y, z+lz));
-        std::cout<<i <<" \n";
-    }
-    for (int i=1; i<lz; i++) {
-        lcc.insert_point_in_cell<1>(dh2, Point(x+lx, y, z+lz-i));
-        std::cout<<i <<" \n";
-    }
-    for (int i=1; i<lx; i++) {
-        lcc.insert_point_in_cell<1>(dh3, Point(x+lx-i, y, z));
-        std::cout<<i <<" \n";
-    }
-return lcc.beta(dh3, 0);
 
+    return dh1;
 }
 
 

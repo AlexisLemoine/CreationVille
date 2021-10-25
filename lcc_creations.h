@@ -28,13 +28,13 @@ typename LCC::Dart_handle make_xy_quadrangle(LCC& lcc,
                                              typename LCC::FT lg1,
                                              typename LCC::FT lg2)
 {
-  return lcc.make_quadrangle(basepoint,
-                             typename LCC::Traits::Construct_translated_point()
+  return lcc.make_quadrangle(typename LCC::Traits::Construct_translated_point()
                              (basepoint,typename LCC::Traits::Vector(0,0,lg2)),
+                             basepoint,
                              typename LCC::Traits::Construct_translated_point()
-                             (basepoint,typename LCC::Traits::Vector(lg1,0,lg2)),
+                             (basepoint,typename LCC::Traits::Vector(lg1,0,0)),
                              typename LCC::Traits::Construct_translated_point()
-                             (basepoint,typename LCC::Traits::Vector(lg1,0,0)));
+                             (basepoint,typename LCC::Traits::Vector(lg1,0,lg2)));
 }
 ///////////////////////////////////////////////////////////////////////////////
 template<class LCC>
@@ -153,11 +153,11 @@ typename LCC::Dart_handle make_xy_grid(LCC& lcc,
       { if(first==nullptr) { first=d; } }
       if(y>0)
       { // sew_2 with square below
-        lcc.template sew<2>(lcc.template beta<0>(d), darts[x]);
+        lcc.template sew<2>(lcc.template beta<1>(d), darts[x]);
       }
 
       prevx=lcc.template beta<1,1>(d);
-      darts[x]=lcc.template beta<1>(d);
+      darts[x]=lcc.template beta<0>(d);
     }
   }
   return first;
