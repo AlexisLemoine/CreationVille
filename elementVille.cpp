@@ -222,7 +222,8 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC
 
 void elementVille::sewMaison(float x, float z, float lx, float lz, LCC& lcc, GridDH& grid) {
     immeuble I;
-    lcc.sew<3>(grid[0][0], I.structMaison(x, 0, z, lx, lz, lcc));
+    suppBrinSol(grid[x][z], lx, lz, lcc);
+    lcc.sew<3>(grid[x][z], I.structMaison(x, 0, z, lx, lz, lcc));
 }
 
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier
@@ -312,5 +313,44 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
             int etage = rand()%10 + 1;
             creerimmeuble(x, z, lx, lz, etage, lcc);
         }
+    }
+}
+
+void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc) {
+    if (lx==3 && lz==2) {
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 1, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 2, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 1, 1, 2));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0));
+    }
+    if (lx==2 && lz==2) {
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0));
+    }
+    if (lx==1 && lz==2) {
+        lcc.remove_cell<1>(lcc.beta(dh, 0));
+    }
+    if (lx==2 && lz==1) {
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
+    }
+    if (lx==2 && lz==3) {
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 1, 2, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0));
+    }
+    if (lx==3 && lz==3) {
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0));
     }
 }

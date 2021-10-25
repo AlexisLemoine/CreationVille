@@ -25,6 +25,7 @@ public:
     void genererquartier (int nb, int dim, LCC& lcc);
     void creerroute (float x, float z, float l, bool orientation, MyGrid& tab, LCC& lcc);
     void creerrue (float x, float z, float l, bool orientation, MyGrid& tab, LCC& lcc);
+    void suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc);
 };
 
 #endif // ELEMENTVILLE_H
