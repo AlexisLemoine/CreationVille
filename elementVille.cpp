@@ -57,7 +57,7 @@ GridDH elementVille::creerGrille(LCC& lcc,
 }
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
-void elementVille::creerroute (float x, float z, float l, bool orientation, MyGrid& tab, LCC& lcc) {
+void elementVille::creerroute (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //les 4 angles de la route
     ib.add_vertex(Point(x, 0, z));
@@ -83,7 +83,7 @@ void elementVille::creerroute (float x, float z, float l, bool orientation, MyGr
 
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
-void elementVille::creerrue (float x, float z, float l, bool orientation, MyGrid& tab, LCC& lcc) {
+void elementVille::creerrue (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
     if ((orientation && x+l<=dim) || (!orientation && z+l<=dim)) {
@@ -232,7 +232,7 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
     //on initialise un tableau avec des 0 à l'intérieur
     //1 = batiment
     //2 = route
-    MyGrid tab(dim,std::vector<int>(dim,0));
+    intGrid tab(dim,std::vector<int>(dim,0));
     for(int i = 0; i < dim; i++)
     {
         for(int j = 0; j < dim; j++)
@@ -361,4 +361,44 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc) {
         lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
         lcc.remove_cell<1>(lcc.beta(dh, 0));
     }
+}
+
+void elementVille::quartier(LCC& lcc) {
+    GridDH tabDH = creerGrille(lcc, Point(0,0,0), dim, dim, dim, dim);
+    intGrid tab(dim,std::vector<int>(dim,0));
+    int p, q, lx, lz, cases;
+        bool good;
+        for (int i=0; i<10; i++) {
+            //imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
+            good = false;
+            while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
+                    //ici les coordonées sont tirées parmi les cases collées à la route, et les longueurs des batiments entre 1 et 3
+                    p = rand()%(dim-2); 
+                    q = rand()%(dim-2);
+                    std::cout<<q<<"\n";
+                    lx = rand()%3 + 1;
+                    lz = rand()%3 + 1; 
+                    std::cout<<p<<" "<<q<<" "<<lx<<" "<<lz<<"\n";
+                    cases=0;
+
+                    //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
+                    for (int j=p; j<p+lx; j++) {
+                        for (int k=q; k<q+lz; k++) {
+                            if (tab[j][k]!=0) {
+                                cases += 1;
+                            }
+                        }
+                    }
+                    //si elles sont toutes libres, on change leur valeur à 1
+                    if (cases==0) {
+                        for (int j=p; j<p+lx; j++) {
+                            for (int k=q; k<q+lz; k++) {
+                                    tab[j][k]=1;
+                            }
+                        }
+                    }
+                    good = (cases==0);
+            }
+            sewMaison(p, q, lx, lz, lcc, tabDH);
+        }
 }

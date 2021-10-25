@@ -19,8 +19,8 @@ int main()
   // Dart_handle dh1 = M.creermaison (-5, -5, 1, 1,lcc);
   //I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
   //  L.plancher(5, 0, 5, 4, 3, lcc);
-   GridDH tab = I.creerGrille(lcc, Point(0,0,0), 5, 5, 5, 5);
-
+  //  GridDH tab = I.creerGrille(lcc, Point(0,0,0), 5, 5, 5, 5);
+M.quartier(lcc);
   
   // Dart_handle dh2 = tab[0][0];
   // M.suppBrinSol(dh2, 3, 2, lcc);
@@ -28,11 +28,11 @@ int main()
   // Dart_handle dh3 = tab[3][3];
   // M.suppBrinSol(dh3, 2, 2, lcc);
 
-  M.sewMaison(0, 0, 1, 2, lcc, tab);
-  M.sewMaison(1, 0, 2, 1, lcc, tab);
-  M.sewMaison(3, 0, 2, 2, lcc, tab);
-  M.sewMaison(1, 1, 1, 1, lcc, tab);
-  M.sewMaison(2, 2, 3, 3, lcc, tab);
+  // M.sewMaison(0, 0, 1, 2, lcc, tab);
+  // M.sewMaison(1, 0, 2, 1, lcc, tab);
+  // M.sewMaison(3, 0, 2, 2, lcc, tab);
+  // M.sewMaison(1, 1, 1, 1, lcc, tab);
+  // M.sewMaison(2, 2, 3, 3, lcc, tab);
   // L.structMaison(0, 1, 0, 3, 2, lcc);
 
   //lcc.remove_cell<0>(lcc.beta(dh2, 1, 1));
