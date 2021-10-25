@@ -32,7 +32,7 @@ int main()
   M.sewMaison(1, 0, 2, 1, lcc, tab);
   M.sewMaison(3, 0, 2, 2, lcc, tab);
   M.sewMaison(1, 1, 1, 1, lcc, tab);
-  M.sewMaison(2, 2, 2, 3, lcc, tab);
+  M.sewMaison(2, 2, 3, 3, lcc, tab);
   // L.structMaison(0, 1, 0, 3, 2, lcc);
 
   //lcc.remove_cell<0>(lcc.beta(dh2, 1, 1));

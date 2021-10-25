@@ -348,6 +348,14 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc) {
         lcc.remove_cell<1>(lcc.beta(dh, 0));
     }
     if (lx==3 && lz==3) {
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 1, 2, 1, 2, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 1, 2, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 1, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 2, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 1, 1, 2));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 2, 0));
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 1));
         lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 0));
         lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1));
         lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
