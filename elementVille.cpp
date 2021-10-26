@@ -361,14 +361,20 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc) {
         lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
         lcc.remove_cell<1>(lcc.beta(dh, 0));
     }
+    if (lx==1 && lz==3) {
+        lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 0));
+    }
+    if (lx==3 && lz==1) {
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 1, 1));
+        lcc.remove_cell<1>(lcc.beta(dh, 1, 1));
+    }
 }
 
-void elementVille::quartier(LCC& lcc) {
-    GridDH tabDH = creerGrille(lcc, Point(0,0,0), dim, dim, dim, dim);
-    intGrid tab(dim,std::vector<int>(dim,0));
+void elementVille::quartier(LCC& lcc, GridDH& tabDH, intGrid& tab) {
     int p, q, lx, lz, cases;
         bool good;
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<50; i++) {
             //imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
             while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées

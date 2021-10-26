@@ -12,7 +12,7 @@ typedef std::vector<std::vector<Dart_handle>> GridDH;
 class elementVille
 {
 public:
-    int dim = 10;
+    int dim = 20;
     GridDH creerGrille(LCC& lcc,
                             const typename LCC::Point basepoint,
                            typename LCC::FT sx,
@@ -26,7 +26,7 @@ public:
     void creerroute (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc);
     void creerrue (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc);
     void suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc);
-    void quartier(LCC& lcc);
+    void quartier(LCC& lcc, GridDH& tabDH, intGrid& tab);
 };
 
 #endif // ELEMENTVILLE_H
