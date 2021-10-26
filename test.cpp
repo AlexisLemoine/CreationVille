@@ -15,15 +15,14 @@ int main()
   immeuble L;
   elementVille M, I;
 
-  // GridDH tabDH = M.creerGrille(lcc, Point(0,0,0), M.dim, M.dim, M.dim, M.dim);
   intGrid tab(M.dim,std::vector<int>(M.dim,0));
 
-  std::cout<<"alpha";
-  L.structMaison(0, 0, 0, 3, 3, lcc);
-  //I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
-  //  L.plancher(5, 0, 5, 4, 3, lcc);
-  //  GridDH tab = I.creerGrille(lcc, Point(0,0,0), 5, 5, 5, 5);
+  ///////////////////////// A DECOMMENTER SI ON VEUT AFFICHER UN QUARTIER
+  // GridDH tabDH = M.creerGrille(lcc, Point(0,0,0), M.dim, M.dim, M.dim, M.dim);
   // M.quartier(lcc, tabDH, tab);
+  //////////////////////////////////////////////////////////////////////
+  
+  L.structMaison(-5, -5, -5, 3, 3, lcc);
 
 
 
