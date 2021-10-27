@@ -16,14 +16,14 @@ int main()
   elementVille M, I;
 
   std::cout<<"alpha";
-  // Dart_handle dh1 = M.creermaison (-5, -5, 1, 1,lcc);
+  Dart_handle dh1 = M.creermaison (-5, -5, 3, 3,lcc);
   //I.creerimmeuble (-10, -10, 10, 3, 7, lcc);
-  //  L.plancher(5, 0, 5, 4, 3, lcc);
+  L.plancher(5, 0, 5, 4, 3, lcc);
    GridDH tab = I.creerGrille(lcc, Point(0,0,0), 5, 5, 5, 5);
 
   
-  // Dart_handle dh2 = tab[0][0];
-  // M.suppBrinSol(dh2, 3, 2, lcc);
+  Dart_handle dh2 = tab[0][0];
+  //M.suppBrinSol(dh2, 3, 2, lcc);
 
   // Dart_handle dh3 = tab[3][3];
   // M.suppBrinSol(dh3, 2, 2, lcc);
@@ -38,7 +38,7 @@ int main()
   //lcc.remove_cell<0>(lcc.beta(dh2, 1, 1));
   // lcc.sew<2>(dh1, dh2);
 
-  //M.genererquartier(0, 30, lcc);
+  M.genererquartier(0, 30, lcc);
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
