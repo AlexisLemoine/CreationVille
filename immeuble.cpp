@@ -8,14 +8,19 @@ typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
 typedef LCC::Point Point;
 typedef LCC::Dart_handle Dart_handle;
 
+/*Point p = lcc.point(lcc.beta(dh7, 0,0,2,0,0,2,0,3));
+std ::cout << p.x() << " " << p.y() << " " << p.z() <<" ";
+Point p2 = lcc.point(lcc.other_extremity(lcc.beta(dh7, 0,0,2,0,0,2,0,3))); // Pour avoir l'extrémité du brin
+std ::cout << p2.x() << " " << p2.y() << " " << p2.z(); */
+
 void immeuble::murCote (LCC& lcc, Dart_handle D){
     // Point p1 = lcc.point(D); // Pour avoir le debut du brin
     // Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
 
     Dart_handle dh1 = lcc.beta(D, 1);
-    Dart_handle dh4 = lcc.beta(lcc.beta(D, 0), 0);
+    Dart_handle dh4 = lcc.beta(D, 0,0);
 
-    Dart_handle dh2 = lcc.beta(lcc.beta(D, 1),1);
+    Dart_handle dh2 = lcc.beta(D, 1,1);
     Dart_handle dh3 = lcc.beta(dh4, 0);
 
     Dart_handle dh6 = lcc.insert_cell_1_in_cell_2(dh4, dh1);
@@ -95,6 +100,71 @@ void immeuble::Haut(LCC& lcc, Dart_handle D){
 
 }
 
+Dart_handle immeuble::murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4){
+    std::vector<Dart_handle> path;
+    path.push_back(lcc.beta(D1, 1, 1));
+    path.push_back(lcc.beta(D3, 0,0,0,2,1,1,2,0));
+    path.push_back(lcc.beta(D3, 0,0,0,2,1,1,2));
+    path.push_back(lcc.beta(D3, 0,0,0,2,1,1,2,1));
+
+    path.push_back(lcc.beta(D2, 1));
+    path.push_back(lcc.beta(D4, 1, 1,2,1,1,2,0));
+    path.push_back(lcc.beta(D4, 1, 1,2,1,1,2));
+    path.push_back(lcc.beta(D4, 1, 1,2,1,1,2,1));
+
+    Dart_handle dh7=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+
+    return dh7;
+}
+
+Dart_handle immeuble::murFace(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4){
+    std::vector<Dart_handle> path;
+    path.push_back(lcc.beta(D1,0,0,2, 3, 2,1,1,2));
+    path.push_back(lcc.beta(D4,1));
+    path.push_back(lcc.beta(D4,1,1));
+    path.push_back(lcc.beta(D4,1,1,1));
+
+    path.push_back(lcc.beta(D2, 1,2, 3, 2,1,1,2));
+    path.push_back(lcc.beta(D3, 1,1));
+    path.push_back(lcc.beta(D3, 1,1,1));
+    path.push_back(lcc.beta(D3, 1,1,1,1));
+
+    Dart_handle dh8=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+
+    return dh8;
+}
+
+void immeuble::murGauche(LCC& lcc, Dart_handle D1, Dart_handle D2){
+    Dart_handle dh9 = lcc.insert_cell_1_in_cell_2(lcc.beta(D1,1,3), lcc.beta(D1, 0,0,3));
+
+    Dart_handle dh11 = lcc.insert_cell_1_in_cell_2(lcc.beta(D2,1,3), lcc.beta(D2, 0,0,3));
+
+
+
+    std::vector<Dart_handle> path;
+    path.push_back(dh9);
+    path.push_back(lcc.beta(dh9,1,2,1));
+    path.push_back(dh11);
+    path.push_back(lcc.beta(dh11, 1,2,1));
+
+    Dart_handle dh13=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+
+}
+
+void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
+
+    Dart_handle dh10 = lcc.insert_cell_1_in_cell_2(lcc.beta(D1, 0,0,2,0,0,3), lcc.beta(D1,1,1,2,1,3));
+    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2( lcc.beta(D2, 0,0,2,0,0,3),lcc.beta(D2,1,1,2,1,3));
+
+    std::vector<Dart_handle> path;
+    path.push_back(dh10);
+    path.push_back(lcc.beta(dh10,1,2,1));
+    path.push_back(dh12);
+    path.push_back(lcc.beta(dh12, 1,2,1));
+
+    Dart_handle dh14=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+}
+
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
 
@@ -131,6 +201,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     Dart_handle dh5 = tab[4];
     Dart_handle dh6 = tab[5];
 
+
     Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
     Dart_handle roof = toit(x, y+1.2, z, lx, .5, lz, lcc);
 
@@ -159,7 +230,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
 
 
     Bas(lcc, dh5);
-    Haut(lcc, dh6); // utiliser un beta.
+    Haut(lcc, dh6);
 
 
     // création des points et traits a l'intérieur de la face du bas :
@@ -167,47 +238,11 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     murCote (lcc, lcc.beta(dh1, 0, 0, 0));
     murCote (lcc, dh2);
 
-    std::vector<Dart_handle> path;
-    path.push_back(lcc.beta(dh1, 1, 1));
-    path.push_back(lcc.beta(dh5, 0,0,0,2,1,1,2,0));
-    path.push_back(lcc.beta(dh5, 0,0,0,2,1,1,2));
-    path.push_back(lcc.beta(dh5, 0,0,0,2,1,1,2,1));
+    Dart_handle dh7 = murFond (lcc, dh1, dh2, dh5, dh6);
+    Dart_handle dh8 = murFace (lcc, dh1, dh2, dh5, dh6);
 
-    path.push_back(lcc.beta(dh2, 1));
-    path.push_back(lcc.beta(dh6, 1, 1,2,1,1,2,0));
-    path.push_back(lcc.beta(dh6, 1, 1,2,1,1,2));
-    path.push_back(lcc.beta(dh6, 1, 1,2,1,1,2,1));
-
-    Dart_handle dh7=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
-    //Point p = lcc.point(lcc.beta(dh1,0,0,2, 3, 2,1,1,2));
-    //std ::cout << p.x() << " " << p.y() << " " << p.z();
-
-    std::vector<Dart_handle> path2;
-    path2.push_back(lcc.beta(dh1,0,0,2, 3, 2,1,1,2));
-    path2.push_back(lcc.beta(dh6,1));
-    path2.push_back(lcc.beta(dh6,1,1));
-    path2.push_back(lcc.beta(dh6,1,1,1));
-
-    path2.push_back(lcc.beta(dh2, 1,2, 3, 2,1,1,2));
-    path2.push_back(lcc.beta(dh5, 1,1));
-    path2.push_back(lcc.beta(dh5, 1,1,1));
-    path2.push_back(lcc.beta(dh5, 1,1,1,1));
-
-    Dart_handle dh8=lcc.insert_cell_2_in_cell_3(path2.begin(),path2.end());
-
-    Dart_handle dh9 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh7,1,1), lcc.beta(dh7, 0));
-    Dart_handle dh10 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh7,1,1,2,1,1), lcc.beta(dh7, 0,0,2,0));
-
-    Dart_handle dh11 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh8,1,1), lcc.beta(dh8, 0));
-    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh8,1,1,2,1,1), lcc.beta(dh8, 0,0,2,0));
-
-    /* std::vector<Dart_handle> path3;
-    path3.push_back(lcc.beta(dh9,2,1,2,3,2,1));
-    path3.push_back(lcc.beta(dh9,2));
-    path3.push_back(lcc.beta(dh9,2,0,2,3,2,0));
-    path3.push_back(dh11);
-
-    Dart_handle dh13=lcc.insert_cell_2_in_cell_3(path3.begin(),path3.end()); */
+    murGauche(lcc, dh7, dh8);
+    murDroite(lcc, dh7, dh8);
 
 
     return dh01;

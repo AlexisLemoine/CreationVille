@@ -12,7 +12,15 @@ public:
     void murCote (LCC& lcc, Dart_handle D);
     void Bas(LCC& lcc, Dart_handle D);
     void Haut(LCC& lcc, Dart_handle D);
+
+
     Dart_handle structMaison(float x, float y, float z, float lx, float lz, LCC& lcc);
+    Dart_handle murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4);
+    Dart_handle murFace(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4);
+    void murGauche(LCC& lcc, Dart_handle D1, Dart_handle D2);
+    void murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2);
+
+
     std::vector<Dart_handle> etage (float x, float y, float z, float lx, float lz, LCC& lcc);
     Dart_handle toit (float x, float y, float z, float lx, float ly, float lz, LCC& lcc);
     void murCoteGauche (LCC& lcc, Dart_handle D);
