@@ -22,7 +22,7 @@ int main()
   // M.quartier(lcc, tabDH, tab);
   //////////////////////////////////////////////////////////////////////
   
-  L.structMaison(-5, -5, -5, 3, 3, lcc);
+  L.structMaison(0, 0, 0, 3, 3, lcc);
 
 
 
