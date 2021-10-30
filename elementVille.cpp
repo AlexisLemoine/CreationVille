@@ -226,6 +226,12 @@ void elementVille::sewMaison(float x, float z, float lx, float lz, LCC& lcc, Gri
     lcc.sew<3>(grid[x][z], I.structMaison(x, 0, z, lx, lz, lcc));
 }
 
+void elementVille::sewImmeuble(int etg, float x, float z, float lx, float lz, LCC& lcc, GridDH& grid) {
+    immeuble I;
+    suppBrinSol(grid[x][z], lx, lz, lcc);
+    lcc.sew<3>(grid[x][z], I.structImmeuble(etg, x, z, lx, lz, lcc));
+}
+
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier
 // et les dimensions du quartier
 void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
@@ -372,10 +378,10 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc) {
 }
 
 void elementVille::quartier(LCC& lcc, GridDH& tabDH, intGrid& tab) {
-    int p, q, lx, lz, cases;
+    int p, q, lx, lz, cases, imm;
         bool good;
         for (int i=0; i<50; i++) {
-            //imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
+            imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
             while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
                     //ici les coordonées sont tirées parmi les cases collées à la route, et les longueurs des batiments entre 1 et 3
@@ -405,6 +411,7 @@ void elementVille::quartier(LCC& lcc, GridDH& tabDH, intGrid& tab) {
                     }
                     good = (cases==0);
             }
-            sewMaison(p, q, lx, lz, lcc, tabDH);
+            if (imm==0) sewImmeuble(rand()%5 + 2, p, q, lx, lz, lcc, tabDH);
+            if (imm==1) sewMaison(p, q, lx, lz, lcc, tabDH);
         }
 }

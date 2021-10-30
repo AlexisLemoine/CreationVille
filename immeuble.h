@@ -13,7 +13,7 @@ public:
     void Bas(LCC& lcc, Dart_handle D);
     void Haut(LCC& lcc, Dart_handle D);
 
-
+    Dart_handle structImmeuble(int etg, float x, float z, float lx, float lz, LCC& lcc);
     Dart_handle structMaison(float x, float y, float z, float lx, float lz, LCC& lcc);
     Dart_handle murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4);
     Dart_handle murFace(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4);

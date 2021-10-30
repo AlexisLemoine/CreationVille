@@ -22,6 +22,7 @@ public:
     void creerimmeuble (float x, float z, float lx, float lz, int etg, LCC& lcc);
     Dart_handle creermaison (float x, float z, float lx, float lz, LCC& lcc);
     void sewMaison(float x, float z, float lx, float lz, LCC& lcc, GridDH& grid);
+    void sewImmeuble(int etg, float x, float z, float lx, float lz, LCC& lcc, GridDH& grid);
     void genererquartier (int nb, int dim, LCC& lcc);
     void creerroute (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc);
     void creerrue (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc);
