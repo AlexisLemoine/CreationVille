@@ -11,9 +11,9 @@ typedef LCC::Point Point;
 
 int main()
 {
-  immeuble L;
+  immeuble L, Ma;
   elementVille M, I;
-
+  LCC lcc;
 
   // intGrid tab(M.dim,std::vector<int>(M.dim,0));
 
@@ -21,9 +21,9 @@ int main()
   // GridDH tabDH = M.creerGrille(lcc, Point(0,0,0), M.dim, M.dim, M.dim, M.dim);
   // M.quartier(lcc, tabDH, tab);
   ////////////////////////
-  M.creermaison(0, 0 , 3, 3, lcc);
-  L.structImmeuble(-5, 0, -5, 3, 3, lcc);
-  M.quartier();
+  Ma.structMaison(0, 0 ,0, 3, 3, lcc);
+  // L.structImmeuble(-5, 0, -5, 3, 3, lcc);
+  //M.quartier();
 
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
@@ -60,7 +60,8 @@ int main()
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
-  draw(M.lcc);
+  draw(lcc);
+
 
   return EXIT_SUCCESS;
 }

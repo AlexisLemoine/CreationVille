@@ -165,6 +165,30 @@ void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
     Dart_handle dh14=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
 }
 
+
+void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
+    Point p = lcc.point(D);
+    std ::cout << p.x() << " " << p.y() << " " << p.z() <<" ";
+    Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
+    std ::cout << p2.x() << " " << p2.y() << " " << p2.z();
+    float x = 1;
+    float y = 0.5;
+    float z = 2.8;
+    Point p3 = lcc.point(lcc.other_extremity(lcc.beta(D, 2,1)));
+    float lz = p3.z() - p.z();
+    float lx = (200 + (rand() % (300)));
+    lx = lx / 1000;
+    float ly = lx;
+    std::cout<< lx << ly;
+    // float ly = 0.3;
+    // float lx = 0.3;
+    // std ::cout << lz;
+    Dart_handle dh1=
+        lcc.make_hexahedron(Point(x,y,z), Point(x+lx,y,z),
+                            Point(x+lx,y+ly,z), Point(x,y+ly,z),
+                            Point(x,y+ly,z+lz), Point(x,y,z+lz),
+                            Point(x+lx,y,z+lz), Point(x+lx,y+ly,z+lz));
+}
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
 
@@ -291,7 +315,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     Dart_handle dh02 =lcc.beta(dh0, 1);
     Dart_handle dh03 =lcc.beta(dh02, 1);
     Dart_handle dh01 =lcc.beta(dh03, 1);
-    for (int i=1; i<lz; i++) {
+    /* for (int i=1; i<lz; i++) {
         lcc.insert_point_in_cell<1>(dh01, Point(x, y, z+lz-i));
         std::cout<<i <<" \n";
     }
@@ -306,7 +330,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     for (int i=1; i<lx; i++) {
         lcc.insert_point_in_cell<1>(dh03, Point(x+i, y, z));
         std::cout<<i <<" \n";
-    }
+    } */
 
 
     Bas(lcc, dh5);
@@ -324,7 +348,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     murGauche(lcc, dh7, dh8);
     murDroite(lcc, dh7, dh8);
 
-
+    creerFenetreDevant(lcc, dh8);
     return dh01;
 }
 
