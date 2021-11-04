@@ -13,28 +13,26 @@ typedef std::vector<std::vector<Dart_handle>> GridDH;
 
 struct Volume
 {
-  unsigned char r;
-  unsigned char g;
-  unsigned char b;
-  std::string type;
+  CGAL::Color color;
+  int type;
 };
 struct Myitem
 {
   template<class Refs>
   struct Dart_wrapper
   {
-    typedef CGAL::Cell_attribute_with_point< Refs, int, CGAL::Tag_true,
-                                             Volume >
+    typedef CGAL::Cell_attribute_with_point< Refs >
     Vertex_attribute;
-    typedef std::tuple<Vertex_attribute> Attributes;
+    typedef CGAL::Cell_attribute< Refs, Volume >
+    Volume_attribute;
+    typedef std::tuple<Vertex_attribute, void, void, Volume_attribute > Attributes;
   };
 };
 typedef CGAL::Linear_cell_complex_traits<3, CGAL::Exact_predicates_inexact_constructions_kernel> Traits;
 typedef CGAL::Linear_cell_complex_for_combinatorial_map<3,3,Traits,Volume> LCC_3;
 
 
-GridDH elementVille::creerGrille(LCC& lcc,
-                                    const typename LCC::Point basepoint,
+GridDH elementVille::creerGrille(  const typename LCC::Point basepoint,
                                    typename LCC::FT sx,
                                    typename LCC::FT sy,
                                    std::size_t nbx,
@@ -57,7 +55,7 @@ GridDH elementVille::creerGrille(LCC& lcc,
 }
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
-void elementVille::creerroute (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc) {
+void elementVille::creerroute (float x, float z, float l, bool orientation) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //les 4 angles de la route
     ib.add_vertex(Point(x, 0, z));
@@ -83,11 +81,11 @@ void elementVille::creerroute (float x, float z, float l, bool orientation, intG
 
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
-void elementVille::creerrue (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc) {
+void elementVille::creerrue (float x, float z, float l, bool orientation) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
     if ((orientation && x+l<=dim) || (!orientation && z+l<=dim)) {
-        creerroute (x, z, l, orientation, tab, lcc);
+        creerroute (x, z, l, orientation);
         int p, q, r, lx, lz, cases, imm;
         bool good;
         for (int i=0; i<10; i++) {
@@ -155,11 +153,11 @@ void elementVille::creerrue (float x, float z, float l, bool orientation, intGri
                 good = (cases==0);
             }
             if (imm==0) {
-                creermaison(p, q, lx, lz, lcc);
+                creermaison(p, q, lx, lz);
             }
             else {
                 int etage = rand()%10 + 1;
-                creerimmeuble(p, q, lx, lz, etage, lcc);
+                creerimmeuble(p, q, lx, lz, etage);
             }
         }
     }
@@ -167,7 +165,7 @@ void elementVille::creerrue (float x, float z, float l, bool orientation, intGri
 
 //On créé et on affiche un immeuble, aux coordonées (x,z), de longueur lx sur l'axe x, lz sur l'axe z, et d'un nombre d'étage etg
 //Pour cela on fait appelle à la fonction étage qui vient créer des étages un à un les uns sur les autres
-void elementVille::creerimmeuble (float x, float z, float lx, float lz, int etg, LCC& lcc) {
+void elementVille::creerimmeuble (float x, float z, float lx, float lz, int etg) {
     immeuble j;
     for (float i=0; i<=etg; i++) {
         j.etage(x, i, z, lx, lz, lcc);
@@ -177,7 +175,7 @@ void elementVille::creerimmeuble (float x, float z, float lx, float lz, int etg,
 //On créé et on affiche une maison, aux coordonnées (x,z), de longueur lx sur l'axe x, lz sur l'axe z
 //Pour cela, on fait appel à la fonction étage qui vient créé un étage, auquel on rajoute un toit en faisant appel à la fonction du même nom
 
-Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC& lcc) {
+Dart_handle elementVille::creermaison (float x, float z, float lx, float lz) {
     My_linear_cell_complex_incremental_builder_3<LCC> ibb(lcc);
     //MAISON EN FONCTION DES PARAMETRES
     immeuble j;
@@ -220,25 +218,24 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz, LCC
 //   ibb.end_surface();
 }
 
-void elementVille::sewMaison(float x, float z, float lx, float lz, LCC& lcc, GridDH& grid) {
+void elementVille::sewMaison(float x, float z, float lx, float lz) {
     immeuble I;
-    suppBrinSol(grid[x][z], lx, lz, lcc);
-    lcc.sew<3>(grid[x][z], I.structMaison(x, 0, z, lx, lz, lcc));
+    suppBrinSol(tabDH[x][z], lx, lz);
+    lcc.sew<3>(tabDH[x][z], I.structMaison(x, 0, z, lx, lz, lcc));
 }
 
-void elementVille::sewImmeuble(int etg, float x, float z, float lx, float lz, LCC& lcc, GridDH& grid) {
+void elementVille::sewImmeuble(int etg, float x, float z, float lx, float lz) {
     immeuble I;
-    suppBrinSol(grid[x][z], lx, lz, lcc);
-    lcc.sew<3>(grid[x][z], I.structImmeuble(etg, x, z, lx, lz, lcc));
+    suppBrinSol(tabDH[x][z], lx, lz);
+    lcc.sew<3>(tabDH[x][z], I.structImmeuble(etg, x, z, lx, lz, lcc));
 }
 
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier
 // et les dimensions du quartier
-void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
+void elementVille::genererquartier (int nb, int dim) {
     //on initialise un tableau avec des 0 à l'intérieur
     //1 = batiment
     //2 = route
-    intGrid tab(dim,std::vector<int>(dim,0));
     for(int i = 0; i < dim; i++)
     {
         for(int j = 0; j < dim; j++)
@@ -257,8 +254,8 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
 
     //on génère un quadrillage de routes au milieu du quartier
     for (int i=5; i<dim-5; i+=4) {
-        creerroute(i, 0, dim, false, tab, lcc);
-        creerroute(0, i, dim, true, tab, lcc);
+        creerroute(i, 0, dim, false);
+        creerroute(0, i, dim, true);
     }
 
     for (int i=5; i<dim-5; i+=4) {
@@ -268,14 +265,14 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
                 compteur += 1;
             }
         }    
-        if (compteur == 0) creerrue(i, 0, dim, false, tab, lcc);
+        if (compteur == 0) creerrue(i, 0, dim, false);
         compteur = 0;
         for (int j=0; j<dim; j++) {
             if (tab[j][i]==1) {
                 compteur += 1;
             }
         }   
-        if (compteur == 0) creerrue(0, i , dim, true, tab, lcc);
+        if (compteur == 0) creerrue(0, i , dim, true);
     }
         // creerrue(0, 9, dim, true, tab, lcc);
         // creerrue(14, 0, dim, false, tab, lcc);
@@ -313,16 +310,16 @@ void elementVille::genererquartier (int nb, int dim, LCC& lcc) {
             }
         }
         if (imm==0) {
-            creermaison(x, z, lx, lz, lcc);
+            creermaison(x, z, lx, lz);
         }
         else {
             int etage = rand()%10 + 1;
-            creerimmeuble(x, z, lx, lz, etage, lcc);
+            creerimmeuble(x, z, lx, lz, etage);
         }
     }
 }
 
-void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc) {
+void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz) {
     if (lx==3 && lz==2) {
         lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 1, 1, 2, 0));
         lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 2, 1, 1));
@@ -377,10 +374,10 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc) {
     }
 }
 
-void elementVille::quartier(LCC& lcc, GridDH& tabDH, intGrid& tab) {
+void elementVille::quartier() {
     int p, q, lx, lz, cases, imm;
         bool good;
-        for (int i=0; i<50; i++) {
+        for (int i=0; i<nbBat; i++) {
             imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
             while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
@@ -411,7 +408,7 @@ void elementVille::quartier(LCC& lcc, GridDH& tabDH, intGrid& tab) {
                     }
                     good = (cases==0);
             }
-            if (imm==0) sewImmeuble(rand()%5 + 2, p, q, lx, lz, lcc, tabDH);
-            if (imm==1) sewMaison(p, q, lx, lz, lcc, tabDH);
+            if (imm==0) sewImmeuble(rand()%5 + 2, p, q, lx, lz);
+            if (imm==1) sewMaison(p, q, lx, lz);
         }
 }

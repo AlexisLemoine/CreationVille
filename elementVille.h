@@ -12,22 +12,29 @@ typedef std::vector<std::vector<Dart_handle>> GridDH;
 class elementVille
 {
 public:
+    LCC lcc;
+    intGrid tab;
+    GridDH tabDH;
     int dim = 20;
-    GridDH creerGrille(LCC& lcc,
-                            const typename LCC::Point basepoint,
+    int nbBat = 20;
+    elementVille() {
+        tabDH = creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
+        tab = intGrid(dim,std::vector<int>(dim,0));
+    };
+    GridDH creerGrille(    const typename LCC::Point basepoint,
                            typename LCC::FT sx,
                            typename LCC::FT sy,
                            std::size_t nbx,
                            std::size_t nby);
-    void creerimmeuble (float x, float z, float lx, float lz, int etg, LCC& lcc);
-    Dart_handle creermaison (float x, float z, float lx, float lz, LCC& lcc);
-    void sewMaison(float x, float z, float lx, float lz, LCC& lcc, GridDH& grid);
-    void sewImmeuble(int etg, float x, float z, float lx, float lz, LCC& lcc, GridDH& grid);
-    void genererquartier (int nb, int dim, LCC& lcc);
-    void creerroute (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc);
-    void creerrue (float x, float z, float l, bool orientation, intGrid& tab, LCC& lcc);
-    void suppBrinSol(Dart_handle& dh, float lx, float lz, LCC& lcc);
-    void quartier(LCC& lcc, GridDH& tabDH, intGrid& tab);
+    void creerimmeuble (float x, float z, float lx, float lz, int etg);
+    Dart_handle creermaison (float x, float z, float lx, float lz);
+    void sewMaison(float x, float z, float lx, float lz);
+    void sewImmeuble(int etg, float x, float z, float lx, float lz);
+    void genererquartier (int nb, int dim);
+    void creerroute (float x, float z, float l, bool orientation);
+    void creerrue (float x, float z, float l, bool orientation);
+    void suppBrinSol(Dart_handle& dh, float lx, float lz);
+    void quartier();
 };
 
 #endif // ELEMENTVILLE_H
