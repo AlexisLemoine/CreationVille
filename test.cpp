@@ -19,10 +19,11 @@ int main()
   intGrid tab(M.dim,std::vector<int>(M.dim,0));
 
   ///////////////////////// A DECOMMENTER SI ON VEUT AFFICHER UN QUARTIER
-  GridDH tabDH = M.creerGrille(lcc, Point(0,0,0), M.dim, M.dim, M.dim, M.dim);
-  M.quartier(lcc, tabDH, tab);
+  // GridDH tabDH = M.creerGrille(lcc, Point(0,0,0), M.dim, M.dim, M.dim, M.dim);
+  // M.quartier(lcc, tabDH, tab);
   //////////////////////////////////////////////////////////////////////
 
+  M.creermaison(0, 0 , 3, 3, lcc);
   L.structImmeuble(-5, 0, -5, 3, 3, lcc);
 
 
