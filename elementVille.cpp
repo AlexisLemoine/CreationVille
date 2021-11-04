@@ -56,27 +56,22 @@ GridDH elementVille::creerGrille(  const typename LCC::Point basepoint,
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
 void elementVille::creerroute (float x, float z, float l, bool orientation) {
-    My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //les 4 angles de la route
-    ib.add_vertex(Point(x, 0, z));
+    Dart_handle d = tabDH[x][z];
+    
     if (orientation) {
-        ib.add_vertex(Point(x+l, 0, z));
-        ib.add_vertex(Point(x+l, 0, z+1));
-        ib.add_vertex(Point(x, 0, z+1));
-        for (int i=0; i<l; i++) {
-            tab[(int)x+i][(int)z]=2;
+        for (int i=1; i<l; i++) {
+            d=lcc.beta(d, 1, 1);
+            route.push_back(d);
         }
     }
     else {
-        ib.add_vertex(Point(x+1, 0, z));
-        ib.add_vertex(Point(x+1, 0, z+l));
-        ib.add_vertex(Point(x, 0, z+l));
-        for (int i=0; i<l; i++) {
-            tab[(int)x][(int)z + i]=2;
+        d=lcc.beta(d, 1);
+        for (int i=1; i<l; i++) {
+            d=lcc.beta(d, 1, 1);
+            route.push_back(d);
         }
     }
-    ib.add_facet({0,1,2,3});
-    ib.end_surface();
 }
 
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
@@ -220,14 +215,14 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz) {
 
 void elementVille::sewMaison(float x, float z, float lx, float lz) {
     immeuble I;
-    suppBrinSol(tabDH[x][z], lx, lz);
-    lcc.sew<3>(tabDH[x][z], I.structMaison(x, 0, z, lx, lz, lcc));
+    suppBrinSol(tabDH[(int)x][(int)z], lx, lz);
+    lcc.sew<3>(tabDH[(int)x][(int)z], I.structMaison(x, 0, z, lx, lz, lcc));
 }
 
 void elementVille::sewImmeuble(int etg, float x, float z, float lx, float lz) {
     immeuble I;
-    suppBrinSol(tabDH[x][z], lx, lz);
-    lcc.sew<3>(tabDH[x][z], I.structImmeuble(etg, x, z, lx, lz, lcc));
+    suppBrinSol(tabDH[(int)x][(int)z], lx, lz);
+    lcc.sew<3>(tabDH[(int)x][(int)z], I.structImmeuble(etg, x, z, lx, lz, lcc));
 }
 
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier
@@ -408,7 +403,7 @@ void elementVille::quartier() {
                     }
                     good = (cases==0);
             }
-            if (imm==0) sewImmeuble(rand()%5 + 2, p, q, lx, lz);
+            if (imm==0) sewImmeuble(rand()%hauteurMax + 2, p, q, lx, lz);
             if (imm==1) sewMaison(p, q, lx, lz);
         }
 }

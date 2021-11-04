@@ -15,11 +15,18 @@ public:
     LCC lcc;
     intGrid tab;
     GridDH tabDH;
-    int dim = 20;
-    int nbBat = 20;
+    int dim;
+    int nbBat;
+    int hauteurMax;
+    std::vector<Dart_handle> route;
+
     elementVille() {
         tabDH = creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
         tab = intGrid(dim,std::vector<int>(dim,0));
+        dim = 20;
+        nbBat = 50;
+        hauteurMax = 10;
+        route = std::vector<Dart_handle>(1,NULL);
     };
     GridDH creerGrille(    const typename LCC::Point basepoint,
                            typename LCC::FT sx,
