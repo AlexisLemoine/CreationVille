@@ -32,44 +32,43 @@ typedef CGAL::Linear_cell_complex_traits<3, CGAL::Exact_predicates_inexact_const
 typedef CGAL::Linear_cell_complex_for_combinatorial_map<3,3,Traits,Volume> LCC_3;
 
 
-GridDH elementVille::creerGrille(  const typename LCC::Point basepoint,
+void elementVille::creerGrille(  const typename LCC::Point basepoint,
                                    typename LCC::FT sx,
                                    typename LCC::FT sy,
                                    std::size_t nbx,
                                    std::size_t nby) 
 {
-    std::cout<<"ça marche \n";
-    GridDH tabDH(sx,std::vector<Dart_handle>(sy,NULL));
     tabDH[0][0] = make_xy_grid(lcc, basepoint, sx, sy, nbx, nby);
     for (int i=0; i<nby; i++) {
         for (int j=0; j<nbx; j++) {
             if (j==0 && i>0) tabDH[j][i]=lcc.beta(tabDH[j][i-1], 0, 2, 0);
             if (j>0) tabDH[j][i] = lcc.beta(tabDH[j-1][i], 1, 1, 2);
 
-  std::cout<<i<<"    "<<j<<"     \n";
         }
-        std::cout<<" on sort \n";
     }
-    return tabDH;
-    std::cout<<"ça marche pas \n";
 }
+
+
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
 void elementVille::creerroute (float x, float z, float l, bool orientation) {
-    //les 4 angles de la route
+    // //les 4 angles de la route
     Dart_handle d = tabDH[x][z];
+    tab[x][z] = 2;
     
     if (orientation) {
         for (int i=1; i<l; i++) {
-            d=lcc.beta(d, 1, 1);
+            d=lcc.beta(d, 1, 1, 2);
             route.push_back(d);
+            tab[x+i][z] = 2;
         }
     }
     else {
         d=lcc.beta(d, 1);
         for (int i=1; i<l; i++) {
-            d=lcc.beta(d, 1, 1);
+            d=lcc.beta(d, 1, 1, 2);
             route.push_back(d);
+            tab[x][z+i]=2;
         }
     }
 }
@@ -215,14 +214,14 @@ Dart_handle elementVille::creermaison (float x, float z, float lx, float lz) {
 
 void elementVille::sewMaison(float x, float z, float lx, float lz) {
     immeuble I;
-    suppBrinSol(tabDH[(int)x][(int)z], lx, lz);
-    lcc.sew<3>(tabDH[(int)x][(int)z], I.structMaison(x, 0, z, lx, lz, lcc));
+    suppBrinSol(tabDH[x][z], lx, lz);
+    lcc.sew<3>(tabDH[x][z], I.structMaison(x, 0, z, lx, lz, lcc));
 }
 
 void elementVille::sewImmeuble(int etg, float x, float z, float lx, float lz) {
     immeuble I;
-    suppBrinSol(tabDH[(int)x][(int)z], lx, lz);
-    lcc.sew<3>(tabDH[(int)x][(int)z], I.structImmeuble(etg, x, z, lx, lz, lcc));
+    suppBrinSol(tabDH[x][z], lx, lz);
+    lcc.sew<3>(tabDH[x][z], I.structImmeuble(etg, x, z, lx, lz, lcc));
 }
 
 //On génère un quartier de manière totalement aléatoire, en prenant en paramètre le nombre de batiments que l'on veut dans le quartier
@@ -372,27 +371,40 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz) {
 void elementVille::quartier() {
     int p, q, lx, lz, cases, imm;
         bool good;
+
+        //on initialise les routes et on stock tous les brins de la grille à supprimer pour faire une route
+        for (int i=0; i<10; i++) {
+            creerroute(rand()%5, rand()%5, rand()%5 + 1, rand()%2);
+        }
+
+        //on supprimer les brins des routes
+        for(int i=0; i<route.size(); i++) {
+            lcc.remove_cell<1>(route[i]);
+        }
+
         for (int i=0; i<nbBat; i++) {
             imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
             while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
                     //ici les coordonées sont tirées parmi les cases collées à la route, et les longueurs des batiments entre 1 et 3
-                    p = rand()%(dim-2); 
-                    q = rand()%(dim-2);
-                    std::cout<<q<<"\n";
                     lx = rand()%3 + 1;
                     lz = rand()%3 + 1; 
+                    p = rand()%(dim-lx+1); 
+                    q = rand()%(dim-lz+1);
                     std::cout<<p<<" "<<q<<" "<<lx<<" "<<lz<<"\n";
                     cases=0;
 
                     //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
                     for (int j=p; j<p+lx; j++) {
+                        
                         for (int k=q; k<q+lz; k++) {
                             if (tab[j][k]!=0) {
                                 cases += 1;
                             }
                         }
                     }
+
+        std::cout<<cases<<"\n";
                     //si elles sont toutes libres, on change leur valeur à 1
                     if (cases==0) {
                         for (int j=p; j<p+lx; j++) {
@@ -403,7 +415,10 @@ void elementVille::quartier() {
                     }
                     good = (cases==0);
             }
+            std::cout<< imm<<"\n\n"<<i<<"\n\n";
             if (imm==0) sewImmeuble(rand()%hauteurMax + 2, p, q, lx, lz);
             if (imm==1) sewMaison(p, q, lx, lz);
+            std::cout<< imm<<"bug ?"<<i<<"\n\n";
+
         }
 }

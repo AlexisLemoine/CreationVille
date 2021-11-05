@@ -21,14 +21,15 @@ public:
     std::vector<Dart_handle> route;
 
     elementVille() {
-        tabDH = creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
-        tab = intGrid(dim,std::vector<int>(dim,0));
-        dim = 20;
-        nbBat = 50;
+        dim = 10;
+        nbBat = 6;
         hauteurMax = 10;
-        route = std::vector<Dart_handle>(1,NULL);
+        tabDH = GridDH(dim, std::vector<Dart_handle>(dim, NULL));
+        creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
+        tab = intGrid(dim,std::vector<int>(dim,0));
+        // route = std::vector<Dart_handle>(0,NULL);
     };
-    GridDH creerGrille(    const typename LCC::Point basepoint,
+    void creerGrille(    const typename LCC::Point basepoint,
                            typename LCC::FT sx,
                            typename LCC::FT sy,
                            std::size_t nbx,

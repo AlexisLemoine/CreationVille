@@ -219,13 +219,11 @@ std::vector<Dart_handle> immeuble::etage (float x, float y, float z, float lx, f
 Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float lz, LCC& lcc) {
     Dart_handle brinretourne;
     Dart_handle brintemp;
-    std::vector<std::vector<Dart_handle>> tab(6,std::vector<Dart_handle>(6,NULL));
+    std::vector<std::vector<Dart_handle>> tab(11,std::vector<Dart_handle>(6,NULL));
     std::cout<<"ON RENTRE \n";
     for (int j=0; j<etg; j++) {
-        std::cout<<"probleme ici \n";
         
         std::vector<Dart_handle> t = etage (x, .2+j*1.2, z, lx, lz, lcc);
-        std::cout<<"probleme là \n";
 
         Dart_handle dh1 = t[0];
         Dart_handle dh2 = t[1];
@@ -234,19 +232,16 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
         Dart_handle dh5 = t[4];
         Dart_handle dh6 = t[5];
 
-        std::cout<<"pas de probleme \n";
         tab[j][0]=dh1;
         tab[j][1]=dh2;
         tab[j][2]=dh3;
         tab[j][3]=dh4;
         tab[j][4]=dh5;
         tab[j][5]=dh6;
-        std::cout<<"pas de probleme \n";
         
         Dart_handle dh0 = plancher(x, j*1.2, z, lx, lz, lcc);
         
         lcc.sew<3>(lcc.beta(dh0, 2, 1, 1, 2), dh5);
-        std::cout<<"pas de prob";
         if (j==0) {
             Dart_handle dh02 =lcc.beta(dh0, 1);
             Dart_handle dh03 =lcc.beta(dh02, 1);
@@ -268,7 +263,6 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
         else lcc.sew<3>(lcc.beta(brintemp, 0), dh0);
 
         brintemp = dh6;
-        std::cout<<j<< " \n";
     }
 
     for (int j=0; j<etg; j++) {
@@ -315,7 +309,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     Dart_handle dh02 =lcc.beta(dh0, 1);
     Dart_handle dh03 =lcc.beta(dh02, 1);
     Dart_handle dh01 =lcc.beta(dh03, 1);
-    /* for (int i=1; i<lz; i++) {
+    for (int i=1; i<lz; i++) {
         lcc.insert_point_in_cell<1>(dh01, Point(x, y, z+lz-i));
         std::cout<<i <<" \n";
     }
@@ -330,7 +324,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     for (int i=1; i<lx; i++) {
         lcc.insert_point_in_cell<1>(dh03, Point(x+i, y, z));
         std::cout<<i <<" \n";
-    } */
+    } 
 
 
     Bas(lcc, dh5);
