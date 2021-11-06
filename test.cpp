@@ -21,10 +21,10 @@ int main()
   // GridDH tabDH = M.creerGrille(lcc, Point(0,0,0), M.dim, M.dim, M.dim, M.dim);
   // M.quartier(lcc, tabDH, tab);
   ////////////////////////
-  Ma.structMaison(0, 0 ,0, 3, 3, lcc);
+  // Ma.structMaison(0, 0 ,0, 3, 3, lcc);
   // L.structImmeuble(-5, 0, -5, 3, 3, lcc);
-  //M.quartier();
-
+  M.quartier();
+  M.grilleint();
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 
@@ -60,7 +60,7 @@ int main()
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
-  draw(lcc);
+  draw(M.lcc);
 
 
   return EXIT_SUCCESS;

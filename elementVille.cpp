@@ -48,28 +48,90 @@ void elementVille::creerGrille(  const typename LCC::Point basepoint,
     }
 }
 
+bool elementVille::rechercheRoute (Dart_handle dh) {
+    for (int i=0; i<route.size(); i++) {
+        if (route[i]==dh) return true;
+    }
+    return false;
+}
+
+void elementVille::grilleint () {
+    for (int i=0; i<dim; i++){
+        std::cout<<"\n";
+        for (int j=0; j<dim; j++) {
+            std::cout<</*"tab["<<j<<"]["<<i<<"] = "<<*/tab[j][i]<<"  ";
+        }
+    }
+}
 
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
 void elementVille::creerroute (float x, float z, float l, bool orientation) {
     // //les 4 angles de la route
+    std::cout<<"   " << x << "    "<< z << "\n";
     Dart_handle d = tabDH[x][z];
+    // if (tab[x][z]==0)  lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z),  Point(x, 0, z+1),  Point(x+1, 0, z+1),  Point(x+1, 0, z) ));
     tab[x][z] = 2;
     
     if (orientation) {
+
+        if (x>0) {
+            if (tab[x-1][z]==2 && (!rechercheRoute(d) && !rechercheRoute(lcc.beta(d, 2)))) route.push_back(d);
+        }
+        if (z+1<dim) {
+            if (tab[x][z+1]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
+        }
+        if(z>0) {
+            if (tab[x][z-1]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
+        }
+
+
         for (int i=1; i<l; i++) {
             d=lcc.beta(d, 1, 1, 2);
-            route.push_back(d);
-            tab[x+i][z] = 2;
+            if (!rechercheRoute(d)) {
+                route.push_back(d);
+                tab[x+i][z] = 2;
+                // lcc.sew<2>(d, lcc.make_quadrangle(Point(x+i, 0, z),  Point(x+i, 0, z+1),  Point(x+i+1, 0, z+1),  Point(x+i+1, 0, z) ));
+            }
+            if (z+1<dim) {
+                if (tab[x+i][z+1]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
+            }
+            if(z>0) {
+                if (tab[x+i][z-1]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
+            }
         }
     }
     else {
         d=lcc.beta(d, 1);
+        if (z>0) {
+            if (tab[x][z-1]==2 && (!rechercheRoute(d) && !rechercheRoute(lcc.beta(d, 2)))) route.push_back(d);
+        }
+        if (x+1<dim) {
+            if (tab[x+1][z]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
+        }
+        if(x>0) {
+            if (tab[x-1][z]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
+        }
+
         for (int i=1; i<l; i++) {
             d=lcc.beta(d, 1, 1, 2);
-            route.push_back(d);
-            tab[x][z+i]=2;
+            if (!rechercheRoute(d)) {
+                route.push_back(d);
+                tab[x][z+i]=2;
+                // lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z+i),  Point(x, 0, z+i+1),  Point(x+1, 0, z+i+1),  Point(x+1, 0, z+i) ));
+            }
+            if (x+1<dim) {
+                if (tab[x+1][z+i]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
+            }
+            if(x>0) {
+                if (tab[x-1][z+i]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
+            }
         }
+
+        if (z+l<dim) {
+            if (tab[x][z+l]==2 && (!rechercheRoute(lcc.beta(d, 1, 1)) && !rechercheRoute(lcc.beta(d, 1, 1, 2)))) route.push_back(lcc.beta(d, 1, 1));
+        }
+
     }
 }
 
@@ -371,14 +433,39 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz) {
 void elementVille::quartier() {
     int p, q, lx, lz, cases, imm;
         bool good;
+        float x = 0;
+        float z = 0;
+        int lng;
+        int hor;
 
         //on initialise les routes et on stock tous les brins de la grille à supprimer pour faire une route
-        for (int i=0; i<10; i++) {
-            creerroute(rand()%5, rand()%5, rand()%5 + 1, rand()%2);
+        for (int i=0; i<dim/5; i++) {
+            hor = rand()%2;
+            lng = rand()%(dim-6)+5;
+            x = rand()%3+x+3;
+            creerroute(x, rand()%(dim-lng), lng, 0);
+            lng = rand()%(dim-6)+5;
+            z = rand()%3+z+3;
+            creerroute(rand()%(dim-lng), z, lng, 1);
+            std::cout<<" c \n\n"<<i<<"   "<<lng<<std::endl<<std::endl;
+            // if (hor==1) { 
+            //     std::cout<<"  iii "<<hor<<std::endl;
+            //     creerroute(rand()%(dim-lng), rand()%dim, lng, hor);
+            //     std::cout<<"  aaa "<<hor<<std::endl;
+            // }
+            // else { 
+            //     std::cout<<" ooo  "<<hor<<std::endl;
+            //     creerroute(rand()%dim, rand()%(dim-lng), lng, hor);
+            //     std::cout<<"  bbbmake "<<hor<<std::endl;
+            // }
+                std::cout<<"  aaa "<<hor<<std::endl;
         }
-
+        std::cout<<"on est là \n";
+                // creerroute(1, 1, 10, 1);
+                // creerroute(1, 1, 10, 1);
         //on supprimer les brins des routes
         for(int i=0; i<route.size(); i++) {
+            std::cout<<i<<"\n";
             lcc.remove_cell<1>(route[i]);
         }
 
@@ -416,7 +503,7 @@ void elementVille::quartier() {
                     good = (cases==0);
             }
             std::cout<< imm<<"\n\n"<<i<<"\n\n";
-            if (imm==0) sewImmeuble(rand()%hauteurMax + 2, p, q, lx, lz);
+            if (imm==0) sewImmeuble(rand()%(hauteurMax-1) + 2, p, q, lx, lz);
             if (imm==1) sewMaison(p, q, lx, lz);
             std::cout<< imm<<"bug ?"<<i<<"\n\n";
 

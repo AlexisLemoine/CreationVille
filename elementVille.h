@@ -21,8 +21,8 @@ public:
     std::vector<Dart_handle> route;
 
     elementVille() {
-        dim = 10;
-        nbBat = 6;
+        dim = 15;
+        nbBat = 1;
         hauteurMax = 10;
         tabDH = GridDH(dim, std::vector<Dart_handle>(dim, NULL));
         creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
@@ -43,6 +43,8 @@ public:
     void creerrue (float x, float z, float l, bool orientation);
     void suppBrinSol(Dart_handle& dh, float lx, float lz);
     void quartier();
+    bool rechercheRoute (Dart_handle dh);
+    void grilleint ();
 };
 
 #endif // ELEMENTVILLE_H
