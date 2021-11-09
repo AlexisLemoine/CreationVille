@@ -171,23 +171,36 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     std ::cout << p.x() << " " << p.y() << " " << p.z() <<" ";
     Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
     std ::cout << p2.x() << " " << p2.y() << " " << p2.z();
-    float x = 1;
-    float y = 0.5;
-    float z = 2.8;
-    Point p3 = lcc.point(lcc.other_extremity(lcc.beta(D, 2,1)));
-    float lz = p3.z() - p.z();
-    float lx = (200 + (rand() % (300)));
+    Point p3 = lcc.point(lcc.beta(D, 1, 1, 2, 1, 1, 2, 1, 1));
+    int nx = p3.x() - p.x();
+    float lx = (250 + (rand() % (150)));
+    int lx2 = lx;
+    float x = (100 + (rand() % (nx*1000 - 100 - lx2))); // avec nx la taille de la façade, 150 la limite pour que l'on ne soit pas trop près du mur et lx2 la taille de la fenêtre.
+    x = x /1000 + p.x();
     lx = lx / 1000;
+    float y = p.y() - p2.y();
+    y = y * 1/2 + p2.y(); // ici 1/3 est le coefficient pour la hauteur de la fenêtre
+    float z = p.z();
+    Point p4 = lcc.point(lcc.other_extremity(lcc.beta(D, 2,1)));
+    float lz = p4.z() - p.z();
+
     float ly = lx;
-    std::cout<< lx << ly;
+    std::cout<< " " << nx << " " << lx;
     // float ly = 0.3;
     // float lx = 0.3;
     // std ::cout << lz;
     Dart_handle dh1=
-        lcc.make_hexahedron(Point(x,y,z), Point(x+lx,y,z),
-                            Point(x+lx,y+ly,z), Point(x,y+ly,z),
-                            Point(x,y+ly,z+lz), Point(x,y,z+lz),
-                            Point(x+lx,y,z+lz), Point(x+lx,y+ly,z+lz));
+        lcc.make_hexahedron(Point(x,y,z+lz),  Point(x+lx,y,z+lz), Point(x+lx,y,z), Point(x,y,z),
+                            Point(x,y+ly,z), Point(x,y+ly,z+lz), Point(x+lx,y+ly,z+lz), Point(x+lx,y+ly,z));
+
+    Point p5 = lcc.point(lcc.beta(dh1, 1));
+    std ::cout << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
+    Point p6 = lcc.point(lcc.other_extremity(lcc.beta(dh1, 1))); // Pour avoir l'extrémité du brin
+    std ::cout << p6.x() << " " << p6.y() << " " << p6.z();
+    lcc.sew<3>(lcc.beta(D, 2, 0), lcc.beta(dh1, 2, 1));
+    // Dart_handle dh2 = lcc.insert_cell_1_in_cell_2(lcc.beta(D, 2, 0), lcc.beta (dh1, 2, 1));
+
+
 }
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
@@ -285,6 +298,8 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
 
         murGauche(lcc, dh7, dh8);
         murDroite(lcc, dh7, dh8);
+
+        creerFenetreDevant(lcc, dh8);
         std::cout<<j << "\n";
     }
     return brinretourne;
