@@ -25,6 +25,7 @@ int main()
   // L.structImmeuble(-5, 0, -5, 3, 3, lcc);
   M.quartier();
   M.grilleint();
+  std::cout<<std::endl<<"end";
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
 

@@ -48,6 +48,7 @@ void elementVille::creerGrille(  const typename LCC::Point basepoint,
     }
 }
 
+//recherche si un brin de la grille de DartHandle est déjà dans le vector route de la classe
 bool elementVille::rechercheRoute (Dart_handle dh) {
     for (int i=0; i<route.size(); i++) {
         if (route[i]==dh) return true;
@@ -117,8 +118,10 @@ void elementVille::creerroute (float x, float z, float l, bool orientation) {
             d=lcc.beta(d, 1, 1, 2);
             if (!rechercheRoute(d)) {
                 route.push_back(d);
-                tab[x][z+i]=2;
-                // lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z+i),  Point(x, 0, z+i+1),  Point(x+1, 0, z+i+1),  Point(x+1, 0, z+i) ));
+                if (tab[x][z+i] == 0) {
+                    tab[x][z+i]=2;
+                    // lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z+i),  Point(x, 0, z+i+1),  Point(x+1, 0, z+i+1),  Point(x+1, 0, z+i) ));
+                }
             }
             if (x+1<dim) {
                 if (tab[x+1][z+i]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
