@@ -20,6 +20,8 @@ public:
     void murGauche(LCC& lcc, Dart_handle D1, Dart_handle D2);
     void murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2);
     void creerFenetreDevant(LCC& lcc, Dart_handle D);
+    void creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D);
+
 
 
     std::vector<Dart_handle> etage (float x, float y, float z, float lx, float lz, LCC& lcc);
