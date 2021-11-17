@@ -190,17 +190,32 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     // float lx = 0.3;
     // std ::cout << lz;
     Dart_handle dh1=
-        lcc.make_hexahedron(Point(x,y,z+lz),  Point(x+lx,y,z+lz), Point(x+lx,y,z), Point(x,y,z),
-                            Point(x,y+ly,z), Point(x,y+ly,z+lz), Point(x+lx,y+ly,z+lz), Point(x+lx,y+ly,z));
+       lcc.make_hexahedron(Point(x,y,z+lz),  Point(x+lx,y,z+lz), Point(x+lx,y,z), Point(x,y,z),
+                           Point(x,y+ly,z), Point(x,y+ly,z+lz), Point(x+lx,y+ly,z+lz), Point(x+lx,y+ly,z));
 
-    Point p5 = lcc.point(lcc.beta(dh1, 1));
-    std ::cout << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
-    Point p6 = lcc.point(lcc.other_extremity(lcc.beta(dh1, 1))); // Pour avoir l'extrémité du brin
+
+    Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
+
+    lcc.sew<3>(dh1, dh2);  // face avant
+    lcc.sew<3>(lcc.beta(dh1, 2), lcc.beta(dh2, 2)); // gauche
+    lcc.sew<3>(lcc.beta(dh1, 0, 2), lcc.beta(dh2, 1, 2)); // dessous
+    lcc.sew<3>(lcc.beta(dh1, 1, 1, 2), lcc.beta(dh2, 1, 1, 2)); // droite
+    lcc.sew<3>(lcc.beta(dh1, 1, 2), lcc.beta(dh2, 0, 2)); // dessus
+    lcc.sew<3>(lcc.beta(dh1, 1, 2, 1, 1, 2), lcc.beta(dh2, 0, 2, 1, 1, 2)); // derrière
+
+
+    Point p5 = lcc.point(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1));
+    std ::cout << " " << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
+    Point p6 = lcc.point(lcc.other_extremity(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1))); // Pour avoir l'extrémité du brin
     std ::cout << p6.x() << " " << p6.y() << " " << p6.z();
-    lcc.sew<3>(lcc.beta(D, 2, 0), lcc.beta(dh1, 2, 1));
-    // Dart_handle dh2 = lcc.insert_cell_1_in_cell_2(lcc.beta(D, 2, 0), lcc.beta (dh1, 2, 1));
 
+    Dart_handle dh5 = lcc.insert_point_in_cell<1>(lcc.beta(D, 2, 1, 1, 2, 0), Point(nx - 0.2, p2.y(), p4.z()));
 
+    /* Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), dh5);
+    Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1));
+
+    Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), lcc.beta(D, 2, 1, 1, 2, 0, 0, 2));
+    Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1, 1)); */
 }
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
