@@ -13,6 +13,10 @@ struct Volume
   int type;
   Volume() {type=UNKNOWN;}
 };
+struct Edge
+{
+  int type;
+};
 struct Face 
 {
   CGAL::Color color;
@@ -25,11 +29,13 @@ struct Myitem
   {
     typedef CGAL::Cell_attribute_with_point< Refs >
     Vertex_attribute;
+    typedef CGAL::Cell_attribute< Refs, Edge >
+    Edge_attribute;
     typedef CGAL::Cell_attribute< Refs, Face >
     Face_attribute;
     typedef CGAL::Cell_attribute< Refs, Volume >
     Volume_attribute;
-    typedef std::tuple<Vertex_attribute, void, Face_attribute, Volume_attribute > Attributes;
+    typedef std::tuple<Vertex_attribute, Edge_attribute, Face_attribute, Volume_attribute > Attributes;
   };
 };
 typedef CGAL::Linear_cell_complex_traits<3, CGAL::Exact_predicates_inexact_constructions_kernel> Traits;
@@ -45,7 +51,20 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
   template<typename LCC>
   bool draw_edge(const LCC& lcc,
                  typename LCC::Dart_const_handle dh) const
-  { return true; }
+  { 
+    if (lcc.template attribute<1>(dh)!=nullptr) {
+      if (lcc.template info<1>(dh).type==ROUTE) {
+        dh = lcc.beta(dh, 2);
+        if (dh!=nullptr) {
+          if (lcc.template attribute<1>(dh)!=nullptr) {
+            if (lcc.template info<1>(dh).type==ROUTE) {
+              return false;
+            }
+          }
+        }
+      }
+    }
+    return true; }
 
   /// @return the color of the volume containing dh
   ///  used only if colored_volume(alcc, dh) and !colored_face(alcc, dh)

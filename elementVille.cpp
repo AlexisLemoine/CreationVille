@@ -47,13 +47,20 @@ void elementVille::grilleint () {
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
 void elementVille::creerroute (float x, float z, float l, bool orientation) {
-    // //les 4 angles de la route
     std::cout<<"   " << x << "    "<< z << "\n";
     Dart_handle d = tabDH[x][z];
     
+    //route horizontale, pour chaque case de la route, on associe chaque brin à l'attribut route, pour pouvoir ensuite enlever leur affichage
+    //et on associe chaque face à l'attribut route également pour pouvoir l'afficher d'une certaine couleur
+    //puis on remplit notre tableau d'entiers avec des 2 partout où il y a des routes
     if (orientation) {
         for (int i=0; i<l; i++) {
             if (tab[x+i][z]==0) {
+                for (int j=0; j<4; j++) {
+                    d=lcc.beta(d, 1);
+                    lcc.template set_attribute<1>(d, lcc.template create_attribute<1>());
+                    lcc.template info<1>(d).type=ROUTE;
+                }
                 lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
                 lcc.template info<2>(d).type=ROUTE;
                 lcc.template info<2>(d).color=CGAL::white();
@@ -63,10 +70,16 @@ void elementVille::creerroute (float x, float z, float l, bool orientation) {
             d=lcc.beta(d, 1, 1, 2);
         }
     }
+    //cas route verticale
     else {
         d=lcc.beta(d, 1);
         for (int i=0; i<l; i++) {
             if (tab[x][z+i] == 0) {
+                for (int j=0; j<4; j++) {
+                    d=lcc.beta(d, 1);
+                    lcc.template set_attribute<1>(d, lcc.template create_attribute<1>());
+                    lcc.template info<1>(d).type=ROUTE;
+                }
                 tab[x][z+i]=2;
                 lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
                 lcc.template info<2>(d).type=ROUTE;
