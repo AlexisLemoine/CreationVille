@@ -209,12 +209,12 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     Point p6 = lcc.point(lcc.other_extremity(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1))); // Pour avoir l'extrémité du brin
     std ::cout << p6.x() << " " << p6.y() << " " << p6.z();
 
-    /* Dart_handle dh5 = lcc.insert_point_in_cell<1>(lcc.beta(D, 2, 1, 1, 2, 0), Point(nx - 0.2, p2.y(), p4.z()));
+    // Dart_handle dh5 = lcc.insert_point_in_cell<1>(lcc.beta(D, 2, 1, 1, 2, 0), Point(nx - 0.2, p2.y(), p4.z()));
 
-    Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), dh5);
-    Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1));
+    // Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), dh5);
+   // Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1));
 
-    Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), lcc.beta(D, 2, 1, 1, 2, 0, 0, 2));
+    /* Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), lcc.beta(D, 2, 1, 1, 2, 0, 0, 2));
     Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1, 1)); */
 
 
@@ -231,33 +231,41 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
             coef2 = coef2 / 1000;
             x2 = coef2;
         }
-        Dart_handle dh10 = lcc. beta(D, 1, 1, 2, 1);
+        Dart_handle dh10 = lcc. beta(D, 2, 0, 0, 2, 0);
         creerPorte(lcc, x2, p2.y(), p4.z(), dh10);
     }
 
 }
 
 void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
-    Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(x, y, z));
-    Dart_handle dh2 = lcc.insert_point_in_cell<1>(dh1, Point(x+0.3, y, z));
+    Dart_handle dh6 = lcc.beta(D, 2, 1, 1, 1, 2);
+
+    Point p5 = lcc.point(D);
+    std ::cout << " " << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
+    Point p6 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
+    std ::cout << p6.x() << " " << p6.y() << " " << p6.z();
+
+
+    Dart_handle dh1 = lcc.insert_point_in_cell<1>(D, Point(x+0.3, y, z));
+    Dart_handle dh2 = lcc.insert_point_in_cell<1>(dh1, Point(x, y, z));
 
     Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(dh1, dh2);
-    Dart_handle dh4 = lcc.insert_point_in_cell<1>(dh3, Point(x, y + 0.8, z));
-    Dart_handle dh5 = lcc.insert_point_in_cell<1>(dh3, Point(x + 0.3, y + 0.8, z));
+    Dart_handle dh4 = lcc.insert_point_in_cell<1>(dh3, Point(x+0.3, y + 0.8, z));
+    Dart_handle dh5 = lcc.insert_point_in_cell<1>(dh3, Point(x, y + 0.8, z));
 
-    Dart_handle dh6 = lcc.beta(D, 1, 2, 1, 1, 2, 1, 1, 2, 1);
 
     z = z - 0.2;
-    Dart_handle dh7 = lcc.insert_point_in_cell<1>(dh6, Point(x + 0.3, y, z));
-    Dart_handle dh8 = lcc.insert_point_in_cell<1>(dh7, Point(x, y, z));
+    Dart_handle dh7 = lcc.insert_point_in_cell<1>(dh6, Point(x, y, z));
+    Dart_handle dh8 = lcc.insert_point_in_cell<1>(dh7, Point(x+0.3, y, z));
 
-    Dart_handle dh9 = lcc.insert_cell_1_in_cell_2(dh7, dh8);
-    Dart_handle dh10 = lcc.insert_point_in_cell<1>(dh9, Point(x + 0.3, y + 0.8, z));
-    Dart_handle dh11 = lcc.insert_point_in_cell<1>(dh9, Point(x , y + 0.8, z));
+    //Dart_handle dh9 = lcc.insert_cell_1_in_cell_2(dh7, dh8);
+    // Dart_handle dh10 = lcc.insert_point_in_cell<1>(dh9, Point(x + 0.3, y + 0.8, z));
+    // Dart_handle dh11 = lcc.insert_point_in_cell<1>(dh9, Point(x , y + 0.8, z));
 
     // Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(dh11, dh4);
 
 }
+
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
 
