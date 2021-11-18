@@ -50,37 +50,30 @@ void elementVille::creerroute (float x, float z, float l, bool orientation) {
     // //les 4 angles de la route
     std::cout<<"   " << x << "    "<< z << "\n";
     Dart_handle d = tabDH[x][z];
-    if (tab[x][z]==0) {
-        lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
-        lcc.template info<2>(d).type=ROUTE;
-        lcc.template info<2>(d).color=CGAL::black();
-        // if (tab[x][z]==0)  lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z),  Point(x, 0, z+1),  Point(x+1, 0, z+1),  Point(x+1, 0, z) ));
-        tab[x][z] = 2;
-    }
     
     if (orientation) {
-        for (int i=1; i<l; i++) {
-            d=lcc.beta(d, 1, 1, 2);
+        for (int i=0; i<l; i++) {
             if (tab[x+i][z]==0) {
                 lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
                 lcc.template info<2>(d).type=ROUTE;
-                lcc.template info<2>(d).color=CGAL::black();
+                lcc.template info<2>(d).color=CGAL::white();
                 tab[x+i][z] = 2;
                 // lcc.sew<2>(d, lcc.make_quadrangle(Point(x+i, 0, z),  Point(x+i, 0, z+1),  Point(x+i+1, 0, z+1),  Point(x+i+1, 0, z) ));
             }
+            d=lcc.beta(d, 1, 1, 2);
         }
     }
     else {
         d=lcc.beta(d, 1);
-        for (int i=1; i<l; i++) {
-            d=lcc.beta(d, 1, 1, 2);
+        for (int i=0; i<l; i++) {
             if (tab[x][z+i] == 0) {
                 tab[x][z+i]=2;
                 lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
                 lcc.template info<2>(d).type=ROUTE;
-                lcc.template info<2>(d).color=CGAL::black();
+                lcc.template info<2>(d).color=CGAL::white();
                 // lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z+i),  Point(x, 0, z+i+1),  Point(x+1, 0, z+i+1),  Point(x+1, 0, z+i) ));
             }
+            d=lcc.beta(d, 1, 1, 2);
         }
 
     }
