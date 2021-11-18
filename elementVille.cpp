@@ -485,11 +485,25 @@ void elementVille::quartier() {
                     cases=0;
 
                     //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
+                    //
                     for (int j=p; j<p+lx; j++) {
                         
                         for (int k=q; k<q+lz; k++) {
                             if (tab[j][k]!=0) {
                                 cases += 1;
+                            }
+                            //test de si le batiment est relié à une route
+                            if (q-1>=0) {
+                                if (tab[j][q-1]==2) good=true;
+                            }
+                            if (q+lz<dim) {
+                                if (tab[j][q+lz]==2) good=true;
+                            }
+                            if (p-1>=0) {
+                                if (tab[p-1][k]==2) good=true;
+                            }
+                            if (p+lx<dim) {
+                                if (tab[p+lx][k]==2) good=true;
                             }
                         }
                     }
@@ -503,7 +517,7 @@ void elementVille::quartier() {
                             }
                         }
                     }
-                    good = (cases==0);
+                    good = (good && cases==0);
             }
             std::cout<< imm<<"\n\n"<<i<<"\n\n";
             if (imm==0) sewImmeuble(rand()%(hauteurMax-1) + 2, p, q, lx, lz);
