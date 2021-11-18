@@ -1,8 +1,8 @@
 #ifndef ELEMENTVILLE_H
 #define ELEMENTVILLE_H
 
-typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
-typedef LCC::Dart_handle Dart_handle;
+#include "lcc_def.h"
+
 typedef std::vector<std::vector<int>> intGrid;
 typedef std::vector<std::vector<Dart_handle>> GridDH;
 

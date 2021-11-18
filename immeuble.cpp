@@ -3,10 +3,9 @@
 #include "My_linear_cell_complex_incremental_builder.h"
 #include <stdlib.h>
 #include "immeuble.h"
+#include "lcc_def.h"
 
-typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
-typedef LCC::Point Point;
-typedef LCC::Dart_handle Dart_handle;
+
 
 /*Point p = lcc.point(lcc.beta(dh7, 0,0,2,0,0,2,0,3));
 std ::cout << p.x() << " " << p.y() << " " << p.z() <<" ";
@@ -113,6 +112,10 @@ Dart_handle immeuble::murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_han
     path.push_back(lcc.beta(D4, 1, 1,2,1,1,2,1));
 
     Dart_handle dh7=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+    
+    lcc.set_attribute<3>(dh7, lcc.create_attribute<3>());
+    lcc.info<3>(dh7).type=MUR;
+    lcc.info<3>(dh7).color=CGAL::gray();
 
     return dh7;
 }
@@ -131,6 +134,9 @@ Dart_handle immeuble::murFace(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_han
 
     Dart_handle dh8=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
 
+    lcc.set_attribute<3>(dh8, lcc.create_attribute<3>());
+    lcc.info<3>(dh8).type=MUR;
+    lcc.info<3>(dh8).color=CGAL::gray();
     return dh8;
 }
 
@@ -148,7 +154,9 @@ void immeuble::murGauche(LCC& lcc, Dart_handle D1, Dart_handle D2){
     path.push_back(lcc.beta(dh11, 1,2,1));
 
     Dart_handle dh13=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
-
+    lcc.set_attribute<3>(dh13, lcc.create_attribute<3>());
+    lcc.info<3>(dh13).type=MUR;
+    lcc.info<3>(dh13).color=CGAL::gray();
 }
 
 void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
@@ -163,6 +171,10 @@ void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
     path.push_back(lcc.beta(dh12, 1,2,1));
 
     Dart_handle dh14=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+
+    lcc.set_attribute<3>(dh14, lcc.create_attribute<3>());
+    lcc.info<3>(dh14).type=MUR;
+    lcc.info<3>(dh14).color=CGAL::gray();
 }
 
 
@@ -281,6 +293,10 @@ std::vector<Dart_handle> immeuble::etage (float x, float y, float z, float lx, f
     Dart_handle dh5 = ib.add_facet({2,6,4,0});
     Dart_handle dh6 = ib.add_facet({3,1,5,7});
     ib.end_surface();
+
+    lcc.set_attribute<3>(dh1, lcc.create_attribute<3>());
+    lcc.info<3>(dh1).type=MUR;
+    lcc.info<3>(dh1).color=CGAL::white();
     std::vector<Dart_handle> tab = {dh1, dh2, dh3, dh4, dh5, dh6};
     return tab;
 }
@@ -373,6 +389,9 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
 
     Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
     Dart_handle roof = toit(x, y+1.2, z, lx, .5, lz, lcc);
+    lcc.set_attribute<3>(roof, lcc.create_attribute<3>());
+    lcc.info<3>(roof).type=MUR;
+    lcc.info<3>(roof).color=CGAL::red();
 
     lcc.sew<3>(lcc.beta(dh6, 1), roof);
     lcc.sew<3>(lcc.beta(dh0, 2, 1, 1, 2), dh5);
@@ -439,6 +458,9 @@ Dart_handle immeuble::plancher(float x, float y, float z, float lx, float lz, LC
     ib.add_facet({3,1,5,7});
     ib.end_surface();
 
+    lcc.set_attribute<3>(dh1, lcc.create_attribute<3>());
+    lcc.info<3>(dh1).type=MUR;
+    lcc.info<3>(dh1).color=CGAL::blue();
     return dh1;
 }
 
