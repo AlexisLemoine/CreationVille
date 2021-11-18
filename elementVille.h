@@ -1,8 +1,8 @@
 #ifndef ELEMENTVILLE_H
 #define ELEMENTVILLE_H
 
-typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
-typedef LCC::Dart_handle Dart_handle;
+#include "lcc_def.h"
+
 typedef std::vector<std::vector<int>> intGrid;
 typedef std::vector<std::vector<Dart_handle>> GridDH;
 
@@ -22,7 +22,7 @@ public:
 
     elementVille() {
         dim = 15;
-        nbBat = 1;
+        nbBat = 40;
         hauteurMax = 10;
         tabDH = GridDH(dim, std::vector<Dart_handle>(dim, NULL));
         creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);

@@ -4,10 +4,7 @@
 #include "lcc_creations.h"
 #include "elementVille.h"
 #include "immeuble.h"
-
-typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
-typedef LCC::Dart_handle Dart_handle;
-typedef LCC::Point Point;
+#include "lcc_def.h"
 
 int main()
 {
@@ -23,7 +20,7 @@ int main()
   ///////////////////////
   Ma.structMaison(0, 0 ,0, 3, 3, lcc);
   // L.structImmeuble(-5, 0, -5, 3, 3, lcc);
-  // M.quartier();
+  M.quartier();
   // M.grilleint();
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
@@ -61,7 +58,7 @@ int main()
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
   // draw(M.lcc);
-  draw(lcc);
+  draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
 
   return EXIT_SUCCESS;

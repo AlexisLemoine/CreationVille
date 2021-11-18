@@ -21,6 +21,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef LCC_CREATIONS_H
 #define LCC_CREATIONS_H
+#include "lcc_def.h"
 ///////////////////////////////////////////////////////////////////////////////
 template<class LCC>
 typename LCC::Dart_handle make_xy_quadrangle(LCC& lcc,
@@ -28,13 +29,13 @@ typename LCC::Dart_handle make_xy_quadrangle(LCC& lcc,
                                              typename LCC::FT lg1,
                                              typename LCC::FT lg2)
 {
-  return lcc.make_quadrangle(typename LCC::Traits::Construct_translated_point()
-                             (basepoint,typename LCC::Traits::Vector(0,0,lg2)),
-                             basepoint,
-                             typename LCC::Traits::Construct_translated_point()
-                             (basepoint,typename LCC::Traits::Vector(lg1,0,0)),
-                             typename LCC::Traits::Construct_translated_point()
-                             (basepoint,typename LCC::Traits::Vector(lg1,0,lg2)));
+   return lcc.make_quadrangle(typename LCC::Traits::Construct_translated_point()
+                                      (basepoint,typename LCC::Traits::Vector(0,0,lg2)),
+                                      basepoint,
+                                      typename LCC::Traits::Construct_translated_point()
+                                      (basepoint,typename LCC::Traits::Vector(lg1,0,0)),
+                                      typename LCC::Traits::Construct_translated_point()
+                                      (basepoint,typename LCC::Traits::Vector(lg1,0,lg2)));
 }
 ///////////////////////////////////////////////////////////////////////////////
 template<class LCC>
@@ -160,6 +161,10 @@ typename LCC::Dart_handle make_xy_grid(LCC& lcc,
       darts[x]=lcc.template beta<0>(d);
     }
   }
+
+  lcc.template set_attribute<3>(first, lcc.template create_attribute<3>());
+  lcc.template info<3>(first).type=GRILLE;
+  lcc.template info<3>(first).color=CGAL::yellow();
   return first;
 }
 ///////////////////////////////////////////////////////////////////////////////

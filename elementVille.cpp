@@ -4,32 +4,11 @@
 #include "lcc_creations.h"
 #include "elementVille.h"
 #include "immeuble.h"
+#include "lcc_def.h"
 
-typedef CGAL::Linear_cell_complex_for_combinatorial_map<3> LCC;
-typedef LCC::Dart_handle Dart_handle;
-typedef LCC::Point Point;
 typedef std::vector<std::vector<Dart_handle>> GridDH;
 
 
-struct Volume
-{
-  CGAL::Color color;
-  int type;
-};
-struct Myitem
-{
-  template<class Refs>
-  struct Dart_wrapper
-  {
-    typedef CGAL::Cell_attribute_with_point< Refs >
-    Vertex_attribute;
-    typedef CGAL::Cell_attribute< Refs, Volume >
-    Volume_attribute;
-    typedef std::tuple<Vertex_attribute, void, void, Volume_attribute > Attributes;
-  };
-};
-typedef CGAL::Linear_cell_complex_traits<3, CGAL::Exact_predicates_inexact_constructions_kernel> Traits;
-typedef CGAL::Linear_cell_complex_for_combinatorial_map<3,3,Traits,Volume> LCC_3;
 
 
 void elementVille::creerGrille(  const typename LCC::Point basepoint,
@@ -48,6 +27,7 @@ void elementVille::creerGrille(  const typename LCC::Point basepoint,
     }
 }
 
+//recherche si un brin de la grille de DartHandle est déjà dans le vector route de la classe
 bool elementVille::rechercheRoute (Dart_handle dh) {
     for (int i=0; i<route.size(); i++) {
         if (route[i]==dh) return true;
@@ -70,66 +50,37 @@ void elementVille::creerroute (float x, float z, float l, bool orientation) {
     // //les 4 angles de la route
     std::cout<<"   " << x << "    "<< z << "\n";
     Dart_handle d = tabDH[x][z];
-    // if (tab[x][z]==0)  lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z),  Point(x, 0, z+1),  Point(x+1, 0, z+1),  Point(x+1, 0, z) ));
-    tab[x][z] = 2;
+    if (tab[x][z]==0) {
+        lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
+        lcc.template info<2>(d).type=ROUTE;
+        lcc.template info<2>(d).color=CGAL::black();
+        // if (tab[x][z]==0)  lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z),  Point(x, 0, z+1),  Point(x+1, 0, z+1),  Point(x+1, 0, z) ));
+        tab[x][z] = 2;
+    }
     
     if (orientation) {
-
-        if (x>0) {
-            if (tab[x-1][z]==2 && (!rechercheRoute(d) && !rechercheRoute(lcc.beta(d, 2)))) route.push_back(d);
-        }
-        if (z+1<dim) {
-            if (tab[x][z+1]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
-        }
-        if(z>0) {
-            if (tab[x][z-1]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
-        }
-
-
         for (int i=1; i<l; i++) {
             d=lcc.beta(d, 1, 1, 2);
-            if (!rechercheRoute(d)) {
-                route.push_back(d);
+            if (tab[x+i][z]==0) {
+                lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
+                lcc.template info<2>(d).type=ROUTE;
+                lcc.template info<2>(d).color=CGAL::black();
                 tab[x+i][z] = 2;
                 // lcc.sew<2>(d, lcc.make_quadrangle(Point(x+i, 0, z),  Point(x+i, 0, z+1),  Point(x+i+1, 0, z+1),  Point(x+i+1, 0, z) ));
-            }
-            if (z+1<dim) {
-                if (tab[x+i][z+1]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
-            }
-            if(z>0) {
-                if (tab[x+i][z-1]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
             }
         }
     }
     else {
         d=lcc.beta(d, 1);
-        if (z>0) {
-            if (tab[x][z-1]==2 && (!rechercheRoute(d) && !rechercheRoute(lcc.beta(d, 2)))) route.push_back(d);
-        }
-        if (x+1<dim) {
-            if (tab[x+1][z]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
-        }
-        if(x>0) {
-            if (tab[x-1][z]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
-        }
-
         for (int i=1; i<l; i++) {
             d=lcc.beta(d, 1, 1, 2);
-            if (!rechercheRoute(d)) {
-                route.push_back(d);
+            if (tab[x][z+i] == 0) {
                 tab[x][z+i]=2;
+                lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
+                lcc.template info<2>(d).type=ROUTE;
+                lcc.template info<2>(d).color=CGAL::black();
                 // lcc.sew<2>(d, lcc.make_quadrangle(Point(x, 0, z+i),  Point(x, 0, z+i+1),  Point(x+1, 0, z+i+1),  Point(x+1, 0, z+i) ));
             }
-            if (x+1<dim) {
-                if (tab[x+1][z+i]==2 && (!rechercheRoute(lcc.beta(d, 1)) && !rechercheRoute(lcc.beta(d, 1, 2)))) route.push_back(lcc.beta(d, 1));
-            }
-            if(x>0) {
-                if (tab[x-1][z+i]==2 && (!rechercheRoute(lcc.beta(d, 0)) && !rechercheRoute(lcc.beta(d, 0, 2)))) route.push_back(lcc.beta(d, 0));
-            }
-        }
-
-        if (z+l<dim) {
-            if (tab[x][z+l]==2 && (!rechercheRoute(lcc.beta(d, 1, 1)) && !rechercheRoute(lcc.beta(d, 1, 1, 2)))) route.push_back(lcc.beta(d, 1, 1));
         }
 
     }
@@ -482,11 +433,25 @@ void elementVille::quartier() {
                     cases=0;
 
                     //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
+                    //
                     for (int j=p; j<p+lx; j++) {
                         
                         for (int k=q; k<q+lz; k++) {
                             if (tab[j][k]!=0) {
                                 cases += 1;
+                            }
+                            //test de si le batiment est relié à une route
+                            if (q-1>=0) {
+                                if (tab[j][q-1]==2) good=true;
+                            }
+                            if (q+lz<dim) {
+                                if (tab[j][q+lz]==2) good=true;
+                            }
+                            if (p-1>=0) {
+                                if (tab[p-1][k]==2) good=true;
+                            }
+                            if (p+lx<dim) {
+                                if (tab[p+lx][k]==2) good=true;
                             }
                         }
                     }
@@ -500,7 +465,7 @@ void elementVille::quartier() {
                             }
                         }
                     }
-                    good = (cases==0);
+                    good = (good && cases==0);
             }
             std::cout<< imm<<"\n\n"<<i<<"\n\n";
             if (imm==0) sewImmeuble(rand()%(hauteurMax-1) + 2, p, q, lx, lz);
