@@ -274,8 +274,8 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     Dart_handle dh10 = lcc.insert_point_in_cell<1>(dh9, Point(x+0.3, y + 0.8, z));
     Dart_handle dh11 = lcc.insert_point_in_cell<1>(dh10, Point(x , y + 0.8, z));
 
-    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta(D, 2), dh9);
-    Dart_handle dh13 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh11, 2), lcc.beta(dh1, 2));
+    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh7, 2), lcc.beta(D, 2));
+    Dart_handle dh13 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh1, 2), lcc.beta(dh6, 2));
 
     Point p7 = lcc.point(dh12);
     std ::cout << " " << p7.x() << " " << p7.y() << " " << p7.z() <<" ";
@@ -285,7 +285,7 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     /* Dart_handle dh14 = lcc.make_combinatorial_hexahedron();
     lcc.sew<3>(dh5, dh14);  // face avant
     lcc.sew<3>(dh9, lcc.beta(dh14, 2,1 , 1, 2)); // derrière
-    lcc.sew<3>(lcc.beta(dh12, 2), lcc.beta(dh14, 0, 2, 0)); // dessous  */
+    lcc.sew<3>(dh12, lcc.beta(dh14, 0, 2, 0)); // dessous */
 }
 
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
