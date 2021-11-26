@@ -13,8 +13,6 @@ Point p2 = lcc.point(lcc.other_extremity(lcc.beta(dh7, 0,0,2,0,0,2,0,3))); // Po
 std ::cout << p2.x() << " " << p2.y() << " " << p2.z(); */
 
 void immeuble::murCote (LCC& lcc, Dart_handle D){
-    // Point p1 = lcc.point(D); // Pour avoir le debut du brin
-    // Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
 
     Dart_handle dh1 = lcc.beta(D, 1);
     Dart_handle dh4 = lcc.beta(D, 0,0);
@@ -24,6 +22,11 @@ void immeuble::murCote (LCC& lcc, Dart_handle D){
 
     Dart_handle dh6 = lcc.insert_cell_1_in_cell_2(dh4, dh1);
     Dart_handle dh5 = lcc.insert_cell_1_in_cell_2(dh2, dh3);
+
+    /* Point p1 = lcc.point(D); // Pour avoir le debut du brin
+    Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
+    std ::cout << p1.x() << " * " << p1.y() << " * " << p1.z() <<" ";
+    std ::cout << p2.x() << " * " << p2.y() << " * " << p2.z() <<" "; */
 
 }
 
@@ -101,6 +104,7 @@ void immeuble::Haut(LCC& lcc, Dart_handle D){
 
 Dart_handle immeuble::murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4){
     std::vector<Dart_handle> path;
+
     path.push_back(lcc.beta(D1, 1, 1));
     path.push_back(lcc.beta(D3, 0,0,0,2,1,1,2,0));
     path.push_back(lcc.beta(D3, 0,0,0,2,1,1,2));
@@ -180,9 +184,7 @@ void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
 
 void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     Point p = lcc.point(D);
-    std ::cout << p.x() << " " << p.y() << " " << p.z() <<" ";
     Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
-    std ::cout << p2.x() << " " << p2.y() << " " << p2.z();
     Point p3 = lcc.point(lcc.beta(D, 1, 1, 2, 1, 1, 2, 1, 1));
     int nx = p3.x() - p.x();
     float lx = (250 + (rand() % (150)));
@@ -206,7 +208,7 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
                            Point(x,y+ly,z), Point(x,y+ly,z+lz), Point(x+lx,y+ly,z+lz), Point(x+lx,y+ly,z));
 
 
-    Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
+    /* Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
 
     lcc.sew<3>(dh1, dh2);  // face avant
     lcc.sew<3>(lcc.beta(dh1, 2), lcc.beta(dh2, 2)); // gauche
@@ -215,11 +217,11 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     lcc.sew<3>(lcc.beta(dh1, 1, 2), lcc.beta(dh2, 0, 2)); // dessus
     lcc.sew<3>(lcc.beta(dh1, 1, 2, 1, 1, 2), lcc.beta(dh2, 0, 2, 1, 1, 2)); // derrière
 
-
-    Point p5 = lcc.point(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1));
-    std ::cout << " " << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
-    Point p6 = lcc.point(lcc.other_extremity(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1))); // Pour avoir l'extrémité du brin
-    std ::cout << p6.x() << " " << p6.y() << " " << p6.z();
+    */
+    Point p5 = lcc.point(lcc.beta(dh1, 2,1,1,2,1));
+    std ::cout << "%" << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
+    Point p6 = lcc.point(lcc.other_extremity(lcc.beta(dh1, 2,1,1,2,1))); // Pour avoir l'extrémité du brin
+    std ::cout << p6.x() << " " << p6.y() << " " << p6.z() << "%";
 
     // Dart_handle dh5 = lcc.insert_point_in_cell<1>(lcc.beta(D, 2, 1, 1, 2, 0), Point(nx - 0.2, p2.y(), p4.z()));
 
@@ -246,6 +248,8 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
         Dart_handle dh10 = lcc. beta(D, 2, 0, 0, 2, 0);
         creerPorte(lcc, x2, p2.y(), p4.z(), dh10);
     }
+    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,2,1,1,2), dh1);
+    //Dart_handle dh13 = lcc.insert_cell_1_in_cell_2( lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1));
 
 }
 
@@ -277,10 +281,10 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh7, 2), lcc.beta(D, 2));
     Dart_handle dh13 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh1, 2), lcc.beta(dh6, 2));
 
-    Point p7 = lcc.point(dh12);
+    /* Point p7 = lcc.point(dh12);
     std ::cout << " " << p7.x() << " " << p7.y() << " " << p7.z() <<" ";
     Point p8 = lcc.point(lcc.other_extremity(dh12)); // Pour avoir l'extrémité du brin
-    std ::cout << p8.x() << " " << p8.y() << " " << p8.z();
+    std ::cout << p8.x() << " " << p8.y() << " " << p8.z(); */
 
     /* Dart_handle dh14 = lcc.make_combinatorial_hexahedron();
     lcc.sew<3>(dh5, dh14);  // face avant
@@ -445,6 +449,11 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     murCote (lcc, dh2);
 
     Dart_handle dh7 = murFond (lcc, dh1, dh2, dh5, dh6);
+
+    Point p1 = lcc.point(dh6); // Pour avoir le debut du brin
+    Point p2 = lcc.point(lcc.other_extremity(dh6)); // Pour avoir l'extrémité du brin
+    std ::cout << p1.x() << " * " << p1.y() << " * " << p1.z() <<" ";
+    std ::cout << p2.x() << " * " << p2.y() << " * " << p2.z() <<" ";
     Dart_handle dh8 = murFace (lcc, dh1, dh2, dh5, dh6);
 
     murGauche(lcc, dh7, dh8);
