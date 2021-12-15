@@ -191,22 +191,19 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     int lx2 = lx;
     //float x = (100 + (rand() % (nx*1000 - 100 - lx2))); // avec nx la taille de la façade, 150 la limite pour que l'on ne soit pas trop près du mur et lx2 la taille de la fenêtre.
     //x = x /1000 + p.x();
-    lx = 0.5;
-    float y = p.y() - p2.y();
-    y = y * 1/2 + p2.y(); // ici 1/3 est le coefficient pour la hauteur de la fenêtre
+    lx = 0.35;
+    /*float y = p.y() - p2.y();
+    y = y * 1/2 + p2.y();*/ // ici 1/3 est le coefficient pour la hauteur de la fenêtre
+    float y = p2.y() +0.5;
     float z = p.z();
     Point p4 = lcc.point(lcc.other_extremity(lcc.beta(D, 2,1)));
     float lz = p4.z() - p.z();
-    float x = 0.8;
+    float x = p.x() +0.5;
     float ly = lx;
     std::cout<< " " << nx << " " << lx << " " << lz;
     // float ly = 0.3;
     // float lx = 0.3;
     // std ::cout << lz;
-    Dart_handle dh1=
-       lcc.make_hexahedron(Point(x,y,z+lz),  Point(x+lx,y,z+lz), Point(x+lx,y,z), Point(x,y,z),
-                           Point(x,y+ly,z), Point(x,y+ly,z+lz), Point(x+lx,y+ly,z+lz), Point(x+lx,y+ly,z));
-
 
     /* Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
 
@@ -217,12 +214,12 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     lcc.sew<3>(lcc.beta(dh1, 1, 2), lcc.beta(dh2, 0, 2)); // dessus
     lcc.sew<3>(lcc.beta(dh1, 1, 2, 1, 1, 2), lcc.beta(dh2, 0, 2, 1, 1, 2)); // derrière
 
-    */
+
     Point p5 = lcc.point(lcc.beta(dh1, 1,1,2));
     std ::cout << "%" << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
     Point p6 = lcc.point(lcc.other_extremity(lcc.beta(dh1, 1,1,2))); // Pour avoir l'extrémité du brin
     std ::cout << p6.x() << " " << p6.y() << " " << p6.z() << "%";
-
+/*
     // Dart_handle dh5 = lcc.insert_point_in_cell<1>(lcc.beta(D, 2, 1, 1, 2, 0), Point(nx - 0.2, p2.y(), p4.z()));
 
     // Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), dh5);
@@ -231,7 +228,7 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     /* Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), lcc.beta(D, 2, 1, 1, 2, 0, 0, 2));
     Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1, 1)); */
 
-
+/*
     if (nx > 1.2){
         float x2;
         int lx3 = lx;
@@ -247,18 +244,38 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
         }
         Dart_handle dh10 = lcc. beta(D, 2, 0, 0, 2, 0);
         creerPorte(lcc, x2, p2.y(), p4.z(), dh10);
-    }
-    Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,2,1,1,2), dh1);
-    Dart_handle dh13 = lcc.make_combinatorial_polygon(4);
-    lcc.sew<3>(lcc.beta(dh1, 2,1,1,2), dh13);
-    Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1,2,1));
+    }*/
+    Dart_handle dh10 = lcc. beta(D, 2, 0, 0, 2, 0);
+    if (p2.y()<1){
+        if ((nx > 1.2)&&(p2.y()<1)){
+            if (nx > 2.2){
+                creerPorte(lcc, p.x()+2.2, p2.y(), p4.z(), dh10);
+
+            }
+            else {
+                creerPorte(lcc, p.x()+1.2, p2.y(), p4.z(), dh10);
+
+            }
+        }
+        else {
+            creerPorte (lcc, p.x()+0.3, p2.y(), p4.z(), dh10);
+        }
+       }
+    if ((nx > 1.2)|| (p2.y()>1 )){
+        Dart_handle dh1=
+            lcc.make_hexahedron(Point(x,y,z+lz),  Point(x+lx,y,z+lz), Point(x+lx,y,z), Point(x,y,z),
+                           Point(x,y+ly,z), Point(x,y+ly,z+lz), Point(x+lx,y+ly,z+lz), Point(x+lx,y+ly,z));
+        Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,2,1,1,2), dh1);
+        Dart_handle dh13 = lcc.make_combinatorial_polygon(4);
+        lcc.sew<3>(lcc.beta(dh1, 2,1,1,2), dh13);
+        Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1,2,1));
 
 //on met un attribut sur les deux brins qui ont servi à créer la fenêtre pour pouvoir ne pas les afficher
                     lcc.template set_attribute<1>(dh12, lcc.template create_attribute<1>());
                     lcc.template info<1>(dh12).type=UNKNOWN;
                     lcc.template set_attribute<1>(dh14, lcc.template create_attribute<1>());
                     lcc.template info<1>(dh14).type=UNKNOWN;
-
+    }
     // Dart_handle dh4 = lcc.beta(dh1, 2);
     // Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
 

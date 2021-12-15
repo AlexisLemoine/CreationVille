@@ -19,11 +19,11 @@ int main()
   // M.genererquartier(tabDH, tab);
   ///////////////////////
 
-  Ma.structMaison(0, 0 ,5, 3, 3, lcc);
+  //Ma.structMaison(0, 0 ,5, 3, 3, lcc);
 
 
   // L.structImmeuble(-5, 0, -5, 3, 3, lcc);
-  //M.quartier();
+  M.quartier();
   // M.grilleint();
 
 //  My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
@@ -60,8 +60,8 @@ int main()
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
-  draw(lcc, "Ville", false, Mydrawingfunctor());
-  // draw(M.lcc, "Ville", false, Mydrawingfunctor());
+  //draw(lcc, "Ville", false, Mydrawingfunctor());
+  draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
 
 
