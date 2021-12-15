@@ -189,15 +189,15 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     int nx = p3.x() - p.x();
     float lx = (250 + (rand() % (150)));
     int lx2 = lx;
-    float x = (100 + (rand() % (nx*1000 - 100 - lx2))); // avec nx la taille de la façade, 150 la limite pour que l'on ne soit pas trop près du mur et lx2 la taille de la fenêtre.
-    x = x /1000 + p.x();
-    lx = lx / 1000;
+    //float x = (100 + (rand() % (nx*1000 - 100 - lx2))); // avec nx la taille de la façade, 150 la limite pour que l'on ne soit pas trop près du mur et lx2 la taille de la fenêtre.
+    //x = x /1000 + p.x();
+    lx = 0.5;
     float y = p.y() - p2.y();
     y = y * 1/2 + p2.y(); // ici 1/3 est le coefficient pour la hauteur de la fenêtre
     float z = p.z();
     Point p4 = lcc.point(lcc.other_extremity(lcc.beta(D, 2,1)));
     float lz = p4.z() - p.z();
-
+    float x = 0.8;
     float ly = lx;
     std::cout<< " " << nx << " " << lx << " " << lz;
     // float ly = 0.3;
@@ -253,14 +253,13 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     lcc.sew<3>(lcc.beta(dh1, 2,1,1,2), dh13);
     Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1,2,1));
 
+    // Dart_handle dh4 = lcc.beta(dh1, 2);
+    // Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
 
-    Dart_handle dh4 = lcc.beta(dh1, 2);
-    Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
-
-    lcc.sew<3>(dh4, dh2); // gauche
-    lcc.sew<3>(lcc.beta(dh4, 1, 2), lcc.beta(dh2, 0,2)); // dessous
-    lcc.sew<3>(lcc.beta(dh4, 1,2,1,1,2), lcc.beta(dh2, 0,2,0,0,2)); // droite
-    lcc.sew<3>(lcc.beta(dh4, 0,2), lcc.beta(dh2, 1,2)); // dessus
+    // lcc.sew<3>(dh4, dh2); // gauche
+    // lcc.sew<3>(lcc.beta(dh4, 1, 2), lcc.beta(dh2, 0,2)); // dessous
+    // lcc.sew<3>(lcc.beta(dh4, 1,2,1,1,2), lcc.beta(dh2, 0,2,0,0,2)); // droite
+    // lcc.sew<3>(lcc.beta(dh4, 0,2), lcc.beta(dh2, 1,2)); // dessus
 }
 
 void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
@@ -303,6 +302,9 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     path.push_back(dh13);
 
     Dart_handle dh20=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+
+    lcc.set_attribute<2>(dh4, lcc.create_attribute<2>());
+    lcc.info<2>(dh4).type=PORTE;
 
     Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh4, 2), lcc.beta(dh9,2));
     Dart_handle dh15 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh10,2), lcc.beta(dh3,2));
@@ -523,7 +525,7 @@ Dart_handle immeuble::plancher(float x, float y, float z, float lx, float lz, LC
     ib.end_surface();
 
     lcc.set_attribute<3>(dh1, lcc.create_attribute<3>());
-    lcc.info<3>(dh1).type=MUR;
+    lcc.info<3>(dh1).type=SOL;
     lcc.info<3>(dh1).color=CGAL::blue();
     return dh1;
 }

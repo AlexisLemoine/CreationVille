@@ -53,6 +53,7 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
                  typename LCC::Dart_const_handle dh) const
   { 
     if (lcc.template attribute<1>(dh)!=nullptr) {
+
       if (lcc.template info<1>(dh).type==ROUTE) {
         dh = lcc.beta(dh, 2);
         if (dh!=nullptr) {
@@ -63,6 +64,7 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
           }
         }
       }
+      else if (lcc.template info<1>(dh).type==UNKNOWN) return false;
     }
     return true; }
 
@@ -75,6 +77,7 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
     if (lcc.template attribute<3>(dh)!=nullptr) {
       if (lcc.template info<3>(dh).type==MUR
           || lcc.template info<3>(dh).type==GRILLE
+          || lcc.template info<3>(dh).type==SOL
           || lcc.template info<3>(dh).type==TOIT) return lcc.template info<3>(dh).color;
       // else {if (lcc.template info<3>(dh).type==GRILLE) return lcc.template info<3>(dh).color;}
     }
@@ -95,6 +98,16 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
     return get_random_color(random);
   }
 
+  /// @return true iff the volume containing dh is colored.
+  template<typename LCC>
+  bool colored_volume(const LCC& lcc,
+                      typename LCC::Dart_const_handle dh) const
+  { 
+    if (lcc.template attribute<3>(dh)!=nullptr) {
+      // if (lcc.template info<3>(dh).type==PORTE) return false;
+    }
+    return true; }
+
   /// @return true iff the face containing dh is colored.
   ///  if we have also colored_volume(alcc, dh), the volume color is
   ///  ignored and only the face color is considered.
@@ -103,7 +116,7 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
                     typename LCC::Dart_const_handle dh) const
   { 
     if (lcc.template attribute<2>(dh)!=nullptr) {
-      if (lcc.template info<2>(dh).type==ROUTE ) return true;
+      if (lcc.template info<2>(dh).type==ROUTE) return true;
     }
     return false; }
 };
