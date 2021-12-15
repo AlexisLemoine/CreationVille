@@ -164,7 +164,7 @@ typename LCC::Dart_handle make_xy_grid(LCC& lcc,
 
   lcc.template set_attribute<3>(first, lcc.template create_attribute<3>());
   lcc.template info<3>(first).type=GRILLE;
-  lcc.template info<3>(first).color=CGAL::yellow();
+  lcc.template info<3>(first).color=CGAL::Color(0, rand()%128, 0);
   return first;
 }
 ///////////////////////////////////////////////////////////////////////////////

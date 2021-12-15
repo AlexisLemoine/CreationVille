@@ -347,9 +347,14 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
         tab[j][5]=dh6;
         
         Dart_handle dh0 = plancher(x, j*1.2, z, lx, lz, lcc);
+        Dart_handle roof = toit(x, (j+1)*1.2, z, lx, .5, lz, lcc);
+        lcc.set_attribute<3>(roof, lcc.create_attribute<3>());
+        lcc.info<3>(roof).type=TOIT;
+        lcc.info<3>(roof).color=CGAL::Color(rand()%128, 0, 0);
         
         lcc.sew<3>(lcc.beta(dh0, 2, 1, 1, 2), dh5);
-        if (j==0) {
+        if (j==0) { //cas du rez de chaussée, on doit insérer des points sur la face inférieure du plancher pour pouvoir le coudre à la grille
+                    //on insère des points à chaque intersection de la grille (1 unité)
             Dart_handle dh02 =lcc.beta(dh0, 1);
             Dart_handle dh03 =lcc.beta(dh02, 1);
             Dart_handle dh01 =lcc.beta(dh03, 1);
@@ -366,6 +371,9 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
                 lcc.insert_point_in_cell<1>(dh03, Point(x+i, 0, z));
             }
             brinretourne = dh01;
+        }
+        else if (j==etg-1) { //cas du dernier étage, on doit coudre la face supérieur à un toit
+            lcc.sew<3>(tab[etg-1][5], roof);
         }
         else lcc.sew<3>(lcc.beta(brintemp, 0), dh0);
 
@@ -412,8 +420,8 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
     Dart_handle roof = toit(x, y+1.2, z, lx, .5, lz, lcc);
     lcc.set_attribute<3>(roof, lcc.create_attribute<3>());
-    lcc.info<3>(roof).type=MUR;
-    lcc.info<3>(roof).color=CGAL::red();
+    lcc.info<3>(roof).type=TOIT;
+    lcc.info<3>(roof).color=CGAL::Color(rand()%128, 0, 0);
 
     lcc.sew<3>(lcc.beta(dh6, 1), roof);
     lcc.sew<3>(lcc.beta(dh0, 2, 1, 1, 2), dh5);

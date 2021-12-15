@@ -74,7 +74,8 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
   {
     if (lcc.template attribute<3>(dh)!=nullptr) {
       if (lcc.template info<3>(dh).type==MUR
-          || lcc.template info<3>(dh).type==GRILLE) return lcc.template info<3>(dh).color;
+          || lcc.template info<3>(dh).type==GRILLE
+          || lcc.template info<3>(dh).type==TOIT) return lcc.template info<3>(dh).color;
       // else {if (lcc.template info<3>(dh).type==GRILLE) return lcc.template info<3>(dh).color;}
     }
       CGAL::Random random((unsigned int)(lcc.darts().index(dh)));
