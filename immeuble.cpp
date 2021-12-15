@@ -218,9 +218,9 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     lcc.sew<3>(lcc.beta(dh1, 1, 2, 1, 1, 2), lcc.beta(dh2, 0, 2, 1, 1, 2)); // derrière
 
     */
-    Point p5 = lcc.point(lcc.beta(dh1, 2,1,1,2,1));
+    Point p5 = lcc.point(lcc.beta(dh1, 1,1,2));
     std ::cout << "%" << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
-    Point p6 = lcc.point(lcc.other_extremity(lcc.beta(dh1, 2,1,1,2,1))); // Pour avoir l'extrémité du brin
+    Point p6 = lcc.point(lcc.other_extremity(lcc.beta(dh1, 1,1,2))); // Pour avoir l'extrémité du brin
     std ::cout << p6.x() << " " << p6.y() << " " << p6.z() << "%";
 
     // Dart_handle dh5 = lcc.insert_point_in_cell<1>(lcc.beta(D, 2, 1, 1, 2, 0), Point(nx - 0.2, p2.y(), p4.z()));
@@ -249,8 +249,18 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
         creerPorte(lcc, x2, p2.y(), p4.z(), dh10);
     }
     Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,2,1,1,2), dh1);
-    //Dart_handle dh13 = lcc.insert_cell_1_in_cell_2( lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1));
+    Dart_handle dh13 = lcc.make_combinatorial_polygon(4);
+    lcc.sew<3>(lcc.beta(dh1, 2,1,1,2), dh13);
+    Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1,2,1));
 
+
+    Dart_handle dh4 = lcc.beta(dh1, 2);
+    Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
+
+    lcc.sew<3>(dh4, dh2); // gauche
+    lcc.sew<3>(lcc.beta(dh4, 1, 2), lcc.beta(dh2, 0,2)); // dessous
+    lcc.sew<3>(lcc.beta(dh4, 1,2,1,1,2), lcc.beta(dh2, 0,2,0,0,2)); // droite
+    lcc.sew<3>(lcc.beta(dh4, 0,2), lcc.beta(dh2, 1,2)); // dessus
 }
 
 void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
@@ -281,10 +291,29 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh7, 2), lcc.beta(D, 2));
     Dart_handle dh13 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh1, 2), lcc.beta(dh6, 2));
 
-    /* Point p7 = lcc.point(dh12);
-    std ::cout << " " << p7.x() << " " << p7.y() << " " << p7.z() <<" ";
-    Point p8 = lcc.point(lcc.other_extremity(dh12)); // Pour avoir l'extrémité du brin
-    std ::cout << p8.x() << " " << p8.y() << " " << p8.z(); */
+    std::vector<Dart_handle> path;
+    path.push_back(dh3);
+    path.push_back(dh4);
+    path.push_back(dh5);
+    path.push_back(dh12);
+
+    path.push_back(dh9);
+    path.push_back(dh10);
+    path.push_back(dh11);
+    path.push_back(dh13);
+
+    Dart_handle dh20=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+
+    Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh4, 2), lcc.beta(dh9,2));
+    Dart_handle dh15 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh10,2), lcc.beta(dh3,2));
+
+    //Dart_handle dh16 = lcc.make_combinatorial_polygon(4);
+    //lcc.sew<3>(dh10, dh16);
+
+    /*Point p7 = lcc.point(dh10);
+    std ::cout << "p" << p7.x() << " " << p7.y() << " " << p7.z() <<" ";
+    Point p8 = lcc.point(lcc.other_extremity(dh10)); // Pour avoir l'extrémité du brin
+    std ::cout << p8.x() << " " << p8.y() << " " << p8.z() << "p"; */
 
     /* Dart_handle dh14 = lcc.make_combinatorial_hexahedron();
     lcc.sew<3>(dh5, dh14);  // face avant
