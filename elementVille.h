@@ -21,8 +21,8 @@ public:
     std::vector<Dart_handle> route;
 
     elementVille() {
-        dim = 15;
-        nbBat = 40;
+        dim = 20;
+        nbBat = 20;
         hauteurMax = 10;
         tabDH = GridDH(dim, std::vector<Dart_handle>(dim, NULL));
         creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
