@@ -253,14 +253,19 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     lcc.sew<3>(lcc.beta(dh1, 2,1,1,2), dh13);
     Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1,2,1));
 
+//on met un attribut sur les deux brins qui ont servi à créer la fenêtre pour pouvoir ne pas les afficher
+                    lcc.template set_attribute<1>(dh12, lcc.template create_attribute<1>());
+                    lcc.template info<1>(dh12).type=UNKNOWN;
+                    lcc.template set_attribute<1>(dh14, lcc.template create_attribute<1>());
+                    lcc.template info<1>(dh14).type=UNKNOWN;
 
-    Dart_handle dh4 = lcc.beta(dh1, 2);
-    Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
+    // Dart_handle dh4 = lcc.beta(dh1, 2);
+    // Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
 
-    lcc.sew<3>(dh4, dh2); // gauche
-    lcc.sew<3>(lcc.beta(dh4, 1, 2), lcc.beta(dh2, 0,2)); // dessous
-    lcc.sew<3>(lcc.beta(dh4, 1,2,1,1,2), lcc.beta(dh2, 0,2,0,0,2)); // droite
-    lcc.sew<3>(lcc.beta(dh4, 0,2), lcc.beta(dh2, 1,2)); // dessus
+    // lcc.sew<3>(dh4, dh2); // gauche
+    // lcc.sew<3>(lcc.beta(dh4, 1, 2), lcc.beta(dh2, 0,2)); // dessous
+    // lcc.sew<3>(lcc.beta(dh4, 1,2,1,1,2), lcc.beta(dh2, 0,2,0,0,2)); // droite
+    // lcc.sew<3>(lcc.beta(dh4, 0,2), lcc.beta(dh2, 1,2)); // dessus
 }
 
 void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
@@ -303,6 +308,9 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     path.push_back(dh13);
 
     Dart_handle dh20=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
+
+    lcc.set_attribute<2>(dh4, lcc.create_attribute<2>());
+    lcc.info<2>(dh4).type=PORTE;
 
     Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh4, 2), lcc.beta(dh9,2));
     Dart_handle dh15 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh10,2), lcc.beta(dh3,2));
@@ -523,7 +531,7 @@ Dart_handle immeuble::plancher(float x, float y, float z, float lx, float lz, LC
     ib.end_surface();
 
     lcc.set_attribute<3>(dh1, lcc.create_attribute<3>());
-    lcc.info<3>(dh1).type=MUR;
+    lcc.info<3>(dh1).type=SOL;
     lcc.info<3>(dh1).color=CGAL::blue();
     return dh1;
 }
