@@ -291,30 +291,29 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     Dart_handle dh12 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh7, 2), lcc.beta(D, 2));
     Dart_handle dh13 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh1, 2), lcc.beta(dh6, 2));
 
+    std::vector<Dart_handle> path;
+    path.push_back(dh3);
+    path.push_back(dh4);
+    path.push_back(dh5);
+    path.push_back(dh12);
 
-    My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
+    path.push_back(dh9);
+    path.push_back(dh10);
+    path.push_back(dh11);
+    path.push_back(dh13);
 
-    ib.add_vertex(Point(x , y , z+0.2));
-    ib.add_vertex(Point(x , y+0.8 , z+0.2));
-    ib.add_vertex(Point(x+0.3 , y+0.8 , z+0.2));
-    ib.add_vertex(Point(x+0.3 , y , z+0.2));
-    ib.add_vertex(Point(x+0.3 , y , z));
-    ib.add_vertex(Point(x+0.3 , y+0.8 , z));
-    ib.add_vertex(Point(x , y+0.8 , z));
-    ib.add_vertex(Point(x , y , z));
-    ib.begin_surface();
-    //on créé les faces du cube
-    Dart_handle dh20 = ib.add_facet({0,1,2,3,4,5,6,7}); // quand on appelle dh1, on est sur l'arrête (0, 1). arrête au même endroit pour les autres dh.
-    ib.end_surface();
+    Dart_handle dh20=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
 
-    Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh20, 1), lcc.beta(dh20,0,0));
-    Dart_handle dh15 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh20, 1,2,1,1), lcc.beta(dh20,0,0,0,2,0));
+    Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh4, 2), lcc.beta(dh9,2));
+    Dart_handle dh15 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh10,2), lcc.beta(dh3,2));
 
+    //Dart_handle dh16 = lcc.make_combinatorial_polygon(4);
+    //lcc.sew<3>(dh10, dh16);
 
-    /* Point p7 = lcc.point(dh12);
-    std ::cout << " " << p7.x() << " " << p7.y() << " " << p7.z() <<" ";
-    Point p8 = lcc.point(lcc.other_extremity(dh12)); // Pour avoir l'extrémité du brin
-    std ::cout << p8.x() << " " << p8.y() << " " << p8.z(); */
+    /*Point p7 = lcc.point(dh10);
+    std ::cout << "p" << p7.x() << " " << p7.y() << " " << p7.z() <<" ";
+    Point p8 = lcc.point(lcc.other_extremity(dh10)); // Pour avoir l'extrémité du brin
+    std ::cout << p8.x() << " " << p8.y() << " " << p8.z() << "p"; */
 
     /* Dart_handle dh14 = lcc.make_combinatorial_hexahedron();
     lcc.sew<3>(dh5, dh14);  // face avant
