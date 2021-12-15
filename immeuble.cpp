@@ -253,6 +253,12 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     lcc.sew<3>(lcc.beta(dh1, 2,1,1,2), dh13);
     Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(D,1,1,2,1), lcc.beta(dh1, 2,1,1,2,1));
 
+//on met un attribut sur les deux brins qui ont servi à créer la fenêtre pour pouvoir ne pas les afficher
+                    lcc.template set_attribute<1>(dh12, lcc.template create_attribute<1>());
+                    lcc.template info<1>(dh12).type=UNKNOWN;
+                    lcc.template set_attribute<1>(dh14, lcc.template create_attribute<1>());
+                    lcc.template info<1>(dh14).type=UNKNOWN;
+
     // Dart_handle dh4 = lcc.beta(dh1, 2);
     // Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
 
