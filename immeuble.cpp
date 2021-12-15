@@ -401,10 +401,13 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
         tab[j][5]=dh6;
         
         Dart_handle dh0 = plancher(x, j*1.2, z, lx, lz, lcc);
-        if (j==etg-1) Dart_handle roof = toit(x, (j+1)*1.2, z, lx, .5, lz, lcc);
-        lcc.set_attribute<3>(roof, lcc.create_attribute<3>());
-        lcc.info<3>(roof).type=TOIT;
-        lcc.info<3>(roof).color=CGAL::Color(rand()%128, 0, 0);
+        Dart_handle roof;
+        if (j==etg-1) {
+            roof = toit(x, (j+1)*1.2, z, lx, .5, lz, lcc);
+            lcc.set_attribute<3>(roof, lcc.create_attribute<3>());
+            lcc.info<3>(roof).type=TOIT;
+            lcc.info<3>(roof).color=CGAL::Color(rand()%128, 0, 0);
+        }
         
         lcc.sew<3>(lcc.beta(dh0, 2, 1, 1, 2), dh5);
         if (j==0) { //cas du rez de chaussée, on doit insérer des points sur la face inférieure du plancher pour pouvoir le coudre à la grille
