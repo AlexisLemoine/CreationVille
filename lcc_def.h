@@ -104,7 +104,7 @@ struct Mydrawingfunctor:public CGAL::DefaultDrawingFunctorLCC
                       typename LCC::Dart_const_handle dh) const
   { 
     if (lcc.template attribute<3>(dh)!=nullptr) {
-      // if (lcc.template info<3>(dh).type==PORTE) return false;
+      if (lcc.template info<3>(dh).type==PORTE) return false;
     }
     return true; }
 

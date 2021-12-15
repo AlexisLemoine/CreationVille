@@ -409,9 +409,9 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
             }
             brinretourne = dh01;
         }
-        else if (j==etg-1) { //cas du dernier étage, on doit coudre la face supérieur à un toit
-            lcc.sew<3>(tab[etg-1][5], roof);
-        }
+        // else if (j==etg-1) { //cas du dernier étage, on doit coudre la face supérieur à un toit
+        //     lcc.sew<3>(tab[etg-1][5], roof);
+        // }
         else lcc.sew<3>(lcc.beta(brintemp, 0), dh0);
 
         brintemp = dh6;

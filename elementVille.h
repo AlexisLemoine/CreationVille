@@ -22,7 +22,7 @@ public:
 
     elementVille() {
         dim = 20;
-        nbBat = 20;
+        nbBat = 35;
         hauteurMax = 10;
         tabDH = GridDH(dim, std::vector<Dart_handle>(dim, NULL));
         creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
