@@ -57,7 +57,7 @@ int main()
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
-  draw(lcc);
+  draw(lcc, "Ville", false, Mydrawingfunctor());
   // draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
 
