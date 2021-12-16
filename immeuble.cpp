@@ -5,13 +5,7 @@
 #include "immeuble.h"
 #include "lcc_def.h"
 
-
-
-/*Point p = lcc.point(lcc.beta(dh7, 0,0,2,0,0,2,0,3));
-std ::cout << p.x() << " " << p.y() << " " << p.z() <<" ";
-Point p2 = lcc.point(lcc.other_extremity(lcc.beta(dh7, 0,0,2,0,0,2,0,3))); // Pour avoir l'extrémité du brin
-std ::cout << p2.x() << " " << p2.y() << " " << p2.z(); */
-
+// Fonction de création des murs de droite et de gauche
 void immeuble::murCote (LCC& lcc, Dart_handle D){
 
     Dart_handle dh1 = lcc.beta(D, 1);
@@ -23,13 +17,9 @@ void immeuble::murCote (LCC& lcc, Dart_handle D){
     Dart_handle dh6 = lcc.insert_cell_1_in_cell_2(dh4, dh1);
     Dart_handle dh5 = lcc.insert_cell_1_in_cell_2(dh2, dh3);
 
-    /* Point p1 = lcc.point(D); // Pour avoir le debut du brin
-    Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
-    std ::cout << p1.x() << " * " << p1.y() << " * " << p1.z() <<" ";
-    std ::cout << p2.x() << " * " << p2.y() << " * " << p2.z() <<" "; */
-
 }
 
+// fonction d'initialisation du sol
 void immeuble::Bas(LCC& lcc, Dart_handle D){
     // création de 4 points sur les arrètes
     Point p1 = lcc.point(D);
@@ -65,6 +55,7 @@ void immeuble::Bas(LCC& lcc, Dart_handle D){
 
 }
 
+// Fonction d'initialisation de la face du haut
 void immeuble::Haut(LCC& lcc, Dart_handle D){
     // création de 4 points sur les arrètes
     Point p1 = lcc.point(D);
@@ -102,6 +93,7 @@ void immeuble::Haut(LCC& lcc, Dart_handle D){
 
 }
 
+// Fonction d'initialisation du mur du fond
 Dart_handle immeuble::murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4){
     std::vector<Dart_handle> path;
 
@@ -124,6 +116,7 @@ Dart_handle immeuble::murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_han
     return dh7;
 }
 
+// fonction d'initialisation du mur de devant
 Dart_handle immeuble::murFace(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_handle D3, Dart_handle D4){
     std::vector<Dart_handle> path;
     path.push_back(lcc.beta(D1,0,0,2, 3, 2,1,1,2));
@@ -144,6 +137,7 @@ Dart_handle immeuble::murFace(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_han
     return dh8;
 }
 
+// Fonction pour distinguer le mur de gauche avec le reste
 void immeuble::murGauche(LCC& lcc, Dart_handle D1, Dart_handle D2){
     Dart_handle dh9 = lcc.insert_cell_1_in_cell_2(lcc.beta(D1,1,3), lcc.beta(D1, 0,0,3));
 
@@ -163,6 +157,7 @@ void immeuble::murGauche(LCC& lcc, Dart_handle D1, Dart_handle D2){
     lcc.info<3>(dh13).color=CGAL::gray();
 }
 
+// Fonction pour distinguer le mur de droite avec le reste
 void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
 
     Dart_handle dh10 = lcc.insert_cell_1_in_cell_2(lcc.beta(D1, 0,0,2,0,0,3), lcc.beta(D1,1,1,2,1,3));
@@ -181,7 +176,7 @@ void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
     lcc.info<3>(dh14).color=CGAL::gray();
 }
 
-
+// Fonction qu créé une fenêtre dans le mur de face
 void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     Point p = lcc.point(D);
     Point p2 = lcc.point(lcc.other_extremity(D)); // Pour avoir l'extrémité du brin
@@ -189,11 +184,7 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     int nx = p3.x() - p.x();
     float lx = (250 + (rand() % (150)));
     int lx2 = lx;
-    //float x = (100 + (rand() % (nx*1000 - 100 - lx2))); // avec nx la taille de la façade, 150 la limite pour que l'on ne soit pas trop près du mur et lx2 la taille de la fenêtre.
-    //x = x /1000 + p.x();
     lx = 0.35;
-    /*float y = p.y() - p2.y();
-    y = y * 1/2 + p2.y();*/ // ici 1/3 est le coefficient pour la hauteur de la fenêtre
     float y = p2.y() +0.5;
     float z = p.z();
     Point p4 = lcc.point(lcc.other_extremity(lcc.beta(D, 2,1)));
@@ -201,50 +192,7 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
     float x = p.x() +0.5;
     float ly = lx;
     std::cout<< " " << nx << " " << lx << " " << lz;
-    // float ly = 0.3;
-    // float lx = 0.3;
-    // std ::cout << lz;
 
-    /* Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
-
-    lcc.sew<3>(dh1, dh2);  // face avant
-    lcc.sew<3>(lcc.beta(dh1, 2), lcc.beta(dh2, 2)); // gauche
-    lcc.sew<3>(lcc.beta(dh1, 0, 2), lcc.beta(dh2, 1, 2)); // dessous
-    lcc.sew<3>(lcc.beta(dh1, 1, 1, 2), lcc.beta(dh2, 1, 1, 2)); // droite
-    lcc.sew<3>(lcc.beta(dh1, 1, 2), lcc.beta(dh2, 0, 2)); // dessus
-    lcc.sew<3>(lcc.beta(dh1, 1, 2, 1, 1, 2), lcc.beta(dh2, 0, 2, 1, 1, 2)); // derrière
-
-
-    Point p5 = lcc.point(lcc.beta(dh1, 1,1,2));
-    std ::cout << "%" << p5.x() << " " << p5.y() << " " << p5.z() <<" ";
-    Point p6 = lcc.point(lcc.other_extremity(lcc.beta(dh1, 1,1,2))); // Pour avoir l'extrémité du brin
-    std ::cout << p6.x() << " " << p6.y() << " " << p6.z() << "%";
-/*
-    // Dart_handle dh5 = lcc.insert_point_in_cell<1>(lcc.beta(D, 2, 1, 1, 2, 0), Point(nx - 0.2, p2.y(), p4.z()));
-
-    // Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), dh5);
-   // Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1));
-
-    /* Dart_handle dh3 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1), lcc.beta(D, 2, 1, 1, 2, 0, 0, 2));
-    Dart_handle dh4 = lcc.insert_cell_1_in_cell_2(lcc.beta (dh2, 1, 1, 2, 1, 1, 2, 1), lcc.beta(D, 1, 1, 2, 1, 1, 2, 1, 1)); */
-
-/*
-    if (nx > 1.2){
-        float x2;
-        int lx3 = lx;
-        if (x < nx/2){
-            float coef = ((nx*1000/2+lx3*1000) + (rand() % (nx * 1000-300 - (nx*1000/2+lx3*1000))));
-            coef = coef / 1000;
-            x2 = coef + 0.2 + p.x();
-        }
-        else{
-            float coef2 = (100 + (rand()% ((nx*1000/2-lx3*1000-100) - 100)));
-            coef2 = coef2 / 1000;
-            x2 = coef2 + p.x();
-        }
-        Dart_handle dh10 = lcc. beta(D, 2, 0, 0, 2, 0);
-        creerPorte(lcc, x2, p2.y(), p4.z(), dh10);
-    }*/
     Dart_handle dh10 = lcc. beta(D, 2, 0, 0, 2, 0);
     if (p2.y()<1){
         if ((nx > 1.2)&&(p2.y()<1)){
@@ -276,15 +224,10 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
                     lcc.template set_attribute<1>(dh14, lcc.template create_attribute<1>());
                     lcc.template info<1>(dh14).type=UNKNOWN;
     }
-    // Dart_handle dh4 = lcc.beta(dh1, 2);
-    // Dart_handle dh2 = lcc.make_combinatorial_hexahedron();
 
-    // lcc.sew<3>(dh4, dh2); // gauche
-    // lcc.sew<3>(lcc.beta(dh4, 1, 2), lcc.beta(dh2, 0,2)); // dessous
-    // lcc.sew<3>(lcc.beta(dh4, 1,2,1,1,2), lcc.beta(dh2, 0,2,0,0,2)); // droite
-    // lcc.sew<3>(lcc.beta(dh4, 0,2), lcc.beta(dh2, 1,2)); // dessus
 }
 
+// fonction de création d'une porte
 void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     Dart_handle dh6 = lcc.beta(D, 2, 1, 1, 1, 2);
 
@@ -332,13 +275,10 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
     Dart_handle dh14 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh4, 2), lcc.beta(dh9,2));
     Dart_handle dh15 = lcc.insert_cell_1_in_cell_2(lcc.beta(dh10,2), lcc.beta(dh3,2));
 
+    // Le bout de code qui suit sert à placer un cube dans la fenêtre
+
     //Dart_handle dh16 = lcc.make_combinatorial_polygon(4);
     //lcc.sew<3>(dh10, dh16);
-
-    /*Point p7 = lcc.point(dh10);
-    std ::cout << "p" << p7.x() << " " << p7.y() << " " << p7.z() <<" ";
-    Point p8 = lcc.point(lcc.other_extremity(dh10)); // Pour avoir l'extrémité du brin
-    std ::cout << p8.x() << " " << p8.y() << " " << p8.z() << "p"; */
 
     /* Dart_handle dh14 = lcc.make_combinatorial_hexahedron();
     lcc.sew<3>(dh5, dh14);  // face avant
@@ -348,7 +288,7 @@ void immeuble::creerPorte(LCC& lcc, float x, float y, float z, Dart_handle D){
 
 //créé 6 surfaces d'un parallélépipède rectangle de coordonnées (x,y,z) et de longueur lx et lz, et 1 en hauteur
 
-
+// Fonction qui créé un étage complet
 std::vector<Dart_handle> immeuble::etage (float x, float y, float z, float lx, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //8 sommets d'un cube
@@ -377,6 +317,7 @@ std::vector<Dart_handle> immeuble::etage (float x, float y, float z, float lx, f
     return tab;
 }
 
+// Fonction qui retourne un immeuble
 Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float lz, LCC& lcc) {
     Dart_handle brinretourne;
     Dart_handle brintemp;
@@ -464,6 +405,7 @@ Dart_handle immeuble::structImmeuble(int etg, float x, float z, float lx, float 
     return brinretourne;
 }
 
+// Fonction qui retourne une maison
 Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz, LCC& lcc) {
     std::vector<Dart_handle> tab = etage (x, y+.2, z, lx, lz, lcc);
     Dart_handle dh1 = tab[0];
@@ -474,7 +416,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     Dart_handle dh6 = tab[5];
 
 
-    /*Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
+    Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
     Dart_handle roof = toit(x, y+1.2, z, lx, .5, lz, lcc);
     lcc.set_attribute<3>(roof, lcc.create_attribute<3>());
     lcc.info<3>(roof).type=TOIT;
@@ -503,7 +445,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
         std::cout<<i <<" \n";
     } 
 
-*/
+
     Bas(lcc, dh5);
     Haut(lcc, dh6);
 
@@ -524,11 +466,11 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     murGauche(lcc, dh7, dh8);
     murDroite(lcc, dh7, dh8);
 
-   // creerFenetreDevant(lcc, dh8);
+    creerFenetreDevant(lcc, dh8);
     //return dh01;
 }
 
-
+// Fonction qui créé le plancher
 Dart_handle immeuble::plancher(float x, float y, float z, float lx, float lz, LCC& lcc) {
     My_linear_cell_complex_incremental_builder_3<LCC> ib(lcc);
     //8 sommets d'un cube
