@@ -22,6 +22,7 @@ int main()
   Ma.structMaison(0, 0 ,5, 3, 3, lcc);
 
 
+
   // L.structImmeuble(-5, 0, -5, 3, 3, lcc);
   // M.quartier();
   // M.grilleint();
@@ -60,9 +61,9 @@ int main()
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
-  draw(lcc, "Ville", false, Mydrawingfunctor());
-  //draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
+  // draw(lcc);
+  draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
 
   return EXIT_SUCCESS;
