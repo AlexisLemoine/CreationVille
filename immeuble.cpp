@@ -471,7 +471,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     Dart_handle dh6 = tab[5];
 
 
-    Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
+    /*Dart_handle dh0 = plancher(x, y, z, lx, lz, lcc);
     Dart_handle roof = toit(x, y+1.2, z, lx, .5, lz, lcc);
     lcc.set_attribute<3>(roof, lcc.create_attribute<3>());
     lcc.info<3>(roof).type=TOIT;
@@ -500,7 +500,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
         std::cout<<i <<" \n";
     } 
 
-
+*/
     Bas(lcc, dh5);
     Haut(lcc, dh6);
 
@@ -521,8 +521,8 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     murGauche(lcc, dh7, dh8);
     murDroite(lcc, dh7, dh8);
 
-    creerFenetreDevant(lcc, dh8);
-    return dh01;
+   // creerFenetreDevant(lcc, dh8);
+    //return dh01;
 }
 
 
