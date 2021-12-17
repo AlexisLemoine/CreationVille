@@ -182,10 +182,10 @@ void elementVille::quartier() {
         //on initialise les routes 
         for (int i=0; i<dim/5; i++) {
             lng = rand()%(dim-6)+5;
-            x = rand()%3+x+3;
+            x = rand()%3+5*i;
             creerroute(x, rand()%(dim-lng), lng, 0);
             lng = rand()%(dim-6)+5;
-            z = rand()%3+z+3;
+            z = rand()%3+5*i;
             creerroute(rand()%(dim-lng), z, lng, 1);
         }
 

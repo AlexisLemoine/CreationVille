@@ -18,7 +18,7 @@ int main()
   // GridDH tabDH = M.creerGrille(Point(0,0,0), M.dim, M.dim, M.dim, M.dim);
   // M.genererquartier(tabDH, tab);
   ///////////////////////
-  // Ma.structMaison(0, 0 ,0, 3, 3, lcc);
+  Ma.structMaison(0, 0 ,0, 3, 3, lcc);
 
 
   // L.structImmeuble(-5, 0, -5, 3, 3, lcc);
@@ -59,7 +59,7 @@ int main()
 
   lcc.display_characteristics(std::cout)<<", valid="
                                         <<lcc.is_valid()<<std::endl; */
-  // draw(lcc);
+  // draw(lcc, "Ville", false, Mydrawingfunctor());
   draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
 
