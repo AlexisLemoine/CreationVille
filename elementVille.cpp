@@ -10,8 +10,9 @@ typedef std::vector<std::vector<Dart_handle>> GridDH;
 
 
 
-
-void elementVille::creerGrille(  const typename LCC::Point basepoint,
+//Méthode qui crée la grille en fonction du nombre de cases en x et z, et du point de départ (que l'on fixe à (0, 0, 0) pour plus de simplicité)
+//Elle se sert directement des fonctions du ficher lcc_creations.h
+void Ville::creerGrille(  const typename LCC::Point basepoint,
                                    typename LCC::FT sx,
                                    typename LCC::FT sy,
                                    std::size_t nbx,
@@ -27,27 +28,19 @@ void elementVille::creerGrille(  const typename LCC::Point basepoint,
     }
 }
 
-//recherche si un brin de la grille de DartHandle est déjà dans le vector route de la classe
-bool elementVille::rechercheRoute (Dart_handle dh) {
-    for (int i=0; i<route.size(); i++) {
-        if (route[i]==dh) return true;
-    }
-    return false;
-}
-
-void elementVille::grilleint () {
+//Affiche dans la console la grille des entiers (avec des 0 si la case est libre, 1 s'il y a un immeuble/maison, 2 si c'est une route)
+void Ville::grilleint () {
     for (int i=0; i<dim; i++){
         std::cout<<"\n";
         for (int j=0; j<dim; j++) {
-            std::cout<</*"tab["<<j<<"]["<<i<<"] = "<<*/tab[j][i]<<"  ";
+            std::cout<<tab[j][i]<<"  ";
         }
     }
 }
 
 //créé une route à partir des coordonées (x, z), de longueur l et de largeur 1, et horizontale si orientation=true, verticale si orientation=false
 //Préconditions : l+x <= la taille max du tableau si orientation=true, l+z <= la taille max du tableau si orientation=true
-void elementVille::creerroute (float x, float z, float l, bool orientation) {
-    std::cout<<"   " << x << "    "<< z << "\n";
+void Ville::creerroute (float x, float z, float l, bool orientation) {
     Dart_handle d = tabDH[x][z];
     
     //route horizontale, pour chaque case de la route, on associe chaque brin à l'attribut route, pour pouvoir ensuite enlever leur affichage
@@ -56,12 +49,12 @@ void elementVille::creerroute (float x, float z, float l, bool orientation) {
     if (orientation) {
         for (int i=0; i<l; i++) {
             if (tab[x+i][z]==0) {
-                for (int j=0; j<4; j++) {
+                for (int j=0; j<4; j++) { // on donne un attribut ROUTE aux 4 brins qui constitue le carré de la grille ROUTE pour choisir de ne pas les afficher
                     d=lcc.beta(d, 1);
                     lcc.template set_attribute<1>(d, lcc.template create_attribute<1>());
                     lcc.template info<1>(d).type=ROUTE;
                 }
-                lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
+                lcc.template set_attribute<2>(d, lcc.template create_attribute<2>()); // on donne un attribut ROUTE à la surface de route pour l'afficher en blanc
                 lcc.template info<2>(d).type=ROUTE;
                 lcc.template info<2>(d).color=CGAL::white();
                 if (i==0 || i==l-1) {
@@ -79,12 +72,12 @@ void elementVille::creerroute (float x, float z, float l, bool orientation) {
         d=lcc.beta(d, 1);
         for (int i=0; i<l; i++) {
             if (tab[x][z+i] == 0) {
-                for (int j=0; j<4; j++) {
+                for (int j=0; j<4; j++) {// on donne un attribut ROUTE aux 4 brins qui constitue le carré de la grille ROUTE pour choisir de ne pas les afficher
                     d=lcc.beta(d, 1);
                     lcc.template set_attribute<1>(d, lcc.template create_attribute<1>());
                     lcc.template info<1>(d).type=ROUTE;
                 }
-                lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());
+                lcc.template set_attribute<2>(d, lcc.template create_attribute<2>());// on donne un attribut ROUTE à la surface de route pour l'afficher en blanc
                 lcc.template info<2>(d).type=ROUTE;
                 lcc.template info<2>(d).color=CGAL::white();
                 if (i==0 || i==l-1) {
@@ -97,27 +90,30 @@ void elementVille::creerroute (float x, float z, float l, bool orientation) {
             d=lcc.beta(d, 1, 1, 2);
         }
     }
-    grilleint();
+
 }
 
 
-
-
-void elementVille::sewMaison(float x, float z, float lx, float lz) {
+//Cette méthode prend en paramètre les coordonnés ainsi que les longueurs en x et z d'une maison, elle la créée, supprime les brins
+//de la grille à l'endroit où elle doit être posée, et sew la grille avec la maison en question
+void Ville::sewMaison(float x, float z, float lx, float lz) {
     immeuble I;
     suppBrinSol(tabDH[x][z], lx, lz);
     lcc.sew<3>(tabDH[x][z], I.structMaison(x, 0, z, lx, lz, lcc));
 }
 
-void elementVille::sewImmeuble(int etg, float x, float z, float lx, float lz) {
+//Cette méthode prend en paramètre le nombre d'étage, les coordonnés ainsi que les longueurs en x et z d'un immeuble, elle le créé, supprime les brins
+//de la grille à l'endroit où il doit être posé, et sew la grille avec l'immeuble en question
+void Ville::sewImmeuble(int etg, float x, float z, float lx, float lz) {
     immeuble I;
     suppBrinSol(tabDH[x][z], lx, lz);
     lcc.sew<3>(tabDH[x][z], I.structImmeuble(etg, x, z, lx, lz, lcc));
 }
 
 
-
-void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz) {
+//Cette méthode prend en paramètre un brin de la grille (celui le plus en haut à gauche) et le nombre en x et z des cases à supprimer sur la grille
+//Elle traite dans chaque cas, la suppresion des brins internes à un carré 2x2 par exemple, afin que l'on ait plus 4 petits carrés, mais un seul carré
+void Ville::suppBrinSol(Dart_handle& dh, float lx, float lz) {
     if (lx==3 && lz==2) {
         lcc.remove_cell<1>(lcc.beta(dh, 1, 1, 2, 1, 1, 2, 0));
         lcc.remove_cell<1>(lcc.beta(dh, 0, 2, 1, 2, 1, 1));
@@ -172,14 +168,14 @@ void elementVille::suppBrinSol(Dart_handle& dh, float lx, float lz) {
     }
 }
 
-void elementVille::quartier() {
+void Ville::quartier() {
     int p, q, lx, lz, cases, imm;
         bool good;
         float x = 0;
         float z = 0;
         int lng;
 
-        //on initialise les routes 
+        //on initialise les routes, avec un intervalle de 5 (+/-3) cases entre chaque, dans le sens horizontal et vertical, de longueur aléatoire 
         for (int i=0; i<dim/5; i++) {
             lng = rand()%(dim-6)+5;
             x = rand()%3+5*i;
@@ -192,13 +188,12 @@ void elementVille::quartier() {
         for (int i=0; i<nbBat; i++) {
             imm = rand()%2; //on tire un nombre aléatoire entre 0 et 1 qui va dire si c'est une maison ou un immeuble
             good = false;
-            while (!good){ //on vérifie à chaque  batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
+            while (!good){ //on vérifie à chaque batiment que ses coordonnées tirées au hasard sont bien libres, sinon on retire de nouvelles coordonées
                     //ici les coordonées sont tirées parmi les cases collées à la route, et les longueurs des batiments entre 1 et 3
                     lx = rand()%3 + 1;
                     lz = rand()%3 + 1; 
                     p = rand()%(dim-lx+1); 
                     q = rand()%(dim-lz+1);
-                    // std::cout<<p<<" "<<q<<" "<<lx<<" "<<lz<<"\n";
                     cases=0;
 
                     //on parcourt toutes les cases occupées par le batiment pour voir si elles sont libres ou non
@@ -236,10 +231,8 @@ void elementVille::quartier() {
                     good = (good && cases==0); //on sort de la boucle seulement si toutes les cases sont libres et si c'est relié à une route
             }
 
-            // std::cout<< imm<<"\n\n"<<i<<"\n\n";
             if (imm==0) sewImmeuble(rand()%(hauteurMax-1) + 2, p, q, lx, lz);
             if (imm==1) sewMaison(p, q, lx, lz);
-            // std::cout<< imm<<"bug ?"<<i<<"\n\n";
 
         }
 }

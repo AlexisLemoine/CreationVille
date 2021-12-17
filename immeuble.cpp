@@ -111,7 +111,8 @@ Dart_handle immeuble::murFond(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_han
     
     lcc.set_attribute<3>(dh7, lcc.create_attribute<3>());
     lcc.info<3>(dh7).type=MUR;
-    lcc.info<3>(dh7).color=CGAL::gray();
+    int a = rand()%50+80;
+    lcc.info<3>(dh7).color=CGAL::Color(a, a, a);
 
     return dh7;
 }
@@ -133,7 +134,8 @@ Dart_handle immeuble::murFace(LCC& lcc, Dart_handle D1, Dart_handle D2, Dart_han
 
     lcc.set_attribute<3>(dh8, lcc.create_attribute<3>());
     lcc.info<3>(dh8).type=MUR;
-    lcc.info<3>(dh8).color=CGAL::gray();
+    int a = rand()%50+80;
+    lcc.info<3>(dh8).color=CGAL::Color(a, a, a);
     return dh8;
 }
 
@@ -154,7 +156,8 @@ void immeuble::murGauche(LCC& lcc, Dart_handle D1, Dart_handle D2){
     Dart_handle dh13=lcc.insert_cell_2_in_cell_3(path.begin(),path.end());
     lcc.set_attribute<3>(dh13, lcc.create_attribute<3>());
     lcc.info<3>(dh13).type=MUR;
-    lcc.info<3>(dh13).color=CGAL::gray();
+    int a = rand()%50+80;
+    lcc.info<3>(dh13).color=CGAL::Color(a, a, a);
 }
 
 // Fonction pour distinguer le mur de droite avec le reste
@@ -173,7 +176,8 @@ void immeuble::murDroite(LCC& lcc, Dart_handle D1, Dart_handle D2){
 
     lcc.set_attribute<3>(dh14, lcc.create_attribute<3>());
     lcc.info<3>(dh14).type=MUR;
-    lcc.info<3>(dh14).color=CGAL::gray();
+    int a=rand()%50+80;
+    lcc.info<3>(dh14).color=CGAL::Color(a, a, a);
 }
 
 // Fonction qu créé une fenêtre dans le mur de face
@@ -220,9 +224,9 @@ void immeuble::creerFenetreDevant(LCC& lcc, Dart_handle D){
 
 //on met un attribut sur les deux brins qui ont servi à créer la fenêtre pour pouvoir ne pas les afficher
                     lcc.template set_attribute<1>(dh12, lcc.template create_attribute<1>());
-                    lcc.template info<1>(dh12).type=UNKNOWN;
+                    lcc.template info<1>(dh12).type=FENETRE;
                     lcc.template set_attribute<1>(dh14, lcc.template create_attribute<1>());
-                    lcc.template info<1>(dh14).type=UNKNOWN;
+                    lcc.template info<1>(dh14).type=FENETRE;
     }
 
 }
@@ -310,9 +314,10 @@ std::vector<Dart_handle> immeuble::etage (float x, float y, float z, float lx, f
     Dart_handle dh6 = ib.add_facet({3,1,5,7});
     ib.end_surface();
 
-    lcc.set_attribute<3>(dh1, lcc.create_attribute<3>());
-    lcc.info<3>(dh1).type=MUR;
-    lcc.info<3>(dh1).color=CGAL::white();
+    // lcc.set_attribute<3>(dh1, lcc.create_attribute<3>());
+    // lcc.info<3>(dh1).type=MUR;
+    // int a = rand()%50+80;
+    // lcc.info<3>(dh1).color=CGAL::Color(a, a, a);
     std::vector<Dart_handle> tab = {dh1, dh2, dh3, dh4, dh5, dh6};
     return tab;
 }
@@ -467,7 +472,7 @@ Dart_handle immeuble::structMaison(float x, float y, float z, float lx, float lz
     murDroite(lcc, dh7, dh8);
 
     creerFenetreDevant(lcc, dh8);
-    //return dh01;
+    return dh01;
 }
 
 // Fonction qui créé le plancher

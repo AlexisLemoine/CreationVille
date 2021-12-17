@@ -6,28 +6,26 @@
 typedef std::vector<std::vector<int>> intGrid;
 typedef std::vector<std::vector<Dart_handle>> GridDH;
 
-// Ici c'est la classe principale. C'est a dire que chaque élément de la ville aura une classe
-// secondaire pour être créer. Pour l'instant, un exemple avec immeuble.
+// Ici c'est la classe principale pour générer la ville, elle est dépendante de la classe immeuble qui elle va gérer les détails des batiments
 
-class elementVille
+class Ville
 {
 public:
     LCC lcc;
     intGrid tab;
     GridDH tabDH;
-    int dim;
-    int nbBat;
-    int hauteurMax;
+    int dim; // les dimensions de la grille, modifiable dans le constructeur ci dessous
+    int nbBat; // le nombre de batiments dans la ville, modifiable ci dessous
+    int hauteurMax; // la hauteur maximale des immeubles, modifiable elle aussi
     std::vector<Dart_handle> route;
 
-    elementVille() {
+    Ville() {
         dim = 20;
-        nbBat = 35;
+        nbBat = 20;
         hauteurMax = 10;
         tabDH = GridDH(dim, std::vector<Dart_handle>(dim, NULL));
         creerGrille(LCC::Point(0,0,0), dim, dim, dim, dim);
         tab = intGrid(dim,std::vector<int>(dim,0));
-        // route = std::vector<Dart_handle>(0,NULL);
     };
     void creerGrille(    const typename LCC::Point basepoint,
                            typename LCC::FT sx,
@@ -43,7 +41,6 @@ public:
     void creerrue (float x, float z, float l, bool orientation);
     void suppBrinSol(Dart_handle& dh, float lx, float lz);
     void quartier();
-    bool rechercheRoute (Dart_handle dh);
     void grilleint ();
 };
 
