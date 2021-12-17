@@ -1,8 +1,11 @@
 # projet création de ville 
 
 Consignes pour utiliser le code du projet de création d'une ville.
+
 /// utilisation de cgal :
+
 lien pour télécharger cgal : https://www.cgal.org/download/linux.html
+
 packages a télécharger : voir sur CGAL pour les dépendances avec CGAL
 
 /// utilisation du projet :
