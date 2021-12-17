@@ -14,10 +14,10 @@ int main()
 
 
   ///////////////////////// A DECOMMENTER SI ON VEUT AFFICHER UN QUARTIER
-  M.quartier();
-  M.grilleint();
+  // M.quartier();
+  // M.grilleint();
 
-  draw(M.lcc, "Ville", false, Mydrawingfunctor());
+  // draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
   //on peut changer quelques paramètres (taille de la grille, nb de bâtiments, et taille max des immeubles) dans le constructeur par défaut de la classe Ville
 
