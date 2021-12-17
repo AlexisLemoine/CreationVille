@@ -45,7 +45,8 @@ void Ville::creerroute (float x, float z, float l, bool orientation) {
     
     //route horizontale, pour chaque case de la route, on associe chaque brin à l'attribut route, pour pouvoir ensuite enlever leur affichage
     //et on associe chaque face à l'attribut route également pour pouvoir l'afficher d'une certaine couleur
-    //puis on remplit notre tableau d'entiers avec des 2 partout où il y a des routes
+    //puis on remplit notre tableau d'entiers avec des 2 partout où il y a des routes, et des 3 aux extrémités de chacune d'elles afin qu'un batiment ne
+    //soit pas placé au bout d'une route.
     if (orientation) {
         for (int i=0; i<l; i++) {
             if (tab[x+i][z]==0) {

@@ -19,23 +19,20 @@ int main()
 
   draw(M.lcc, "Ville", false, Mydrawingfunctor());
 
+  //on peut changer quelques paramètres (taille de la grille, nb de bâtiments, et taille max des immeubles) dans le constructeur par défaut de la classe Ville
+
   ///////////////////////
 
 
   /////////////////////////A decommenter pour afficher une maison
   // Ma.structMaison(0, 0 ,5, 3, 3, lcc);
-  // draw(lcc, "Ville", false, Mydrawingfunctor());
+  // draw(lcc, "Maison", false, Mydrawingfunctor());
   //////////////////////
 
   /////////////////////////A decommenter pour afficher un immeuble
-  //L.structImmeuble(6, 0, -5, 3, 3, lcc);
-  //draw(lcc, "Ville", false, Mydrawingfunctor());
+  // L.structImmeuble(6, 0, -5, 3, 3, lcc);
+  // draw(lcc, "Immeuble", false, Mydrawingfunctor());
   /////////////////////
-
-
-
-
-  // draw(lcc);
 
   return EXIT_SUCCESS;
 }
